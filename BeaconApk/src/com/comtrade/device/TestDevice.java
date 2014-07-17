@@ -39,8 +39,8 @@ public class TestDevice extends Device {
 		void onDeviceFailedToSendNotification(Notification notification);
 	}
 	
-	public TestDevice(Context context, DeviceData deviceData, TestEquipment testEquipment){
-		super(context, deviceData);
+	public TestDevice(Context context, DeviceData device){
+		super(context, device);
 
 		attachEquipment(new TestEquipment());
 

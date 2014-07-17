@@ -154,7 +154,7 @@ RegistrationListener, SensorEventListener{
 				"1.1");
 		deviceData = new DeviceData(deviceId, deviceKey	, deviceName, DeviceData.DEVICE_STATUS_ONLINE, network, deviceClass);
 		
-		device = new TestDevice(getApplicationContext(), deviceData, new TestEquipment());
+		device = new TestDevice(getApplicationContext(), deviceData);
 
 		//Setting up DeviceHive
 		parameters = new LinkedList<Parameter>();
@@ -338,7 +338,7 @@ RegistrationListener, SensorEventListener{
 			final PointF tacka = Circle.kandidat(points);
 
 
-			if(tacka != null && !Float.isNaN(tacka.x) && !Float.isNaN(tacka.y)){
+			if(tacka != null && !Float.isNaN(tacka.x) && !Float.isNaN(tacka.y) && !(tacka.x==0 && tacka.y==0)){
 				runOnUiThread(new Runnable() {
 					public void run() {
 						if (currnetPosition.x < Math.abs(tacka.x+ 0.75) || currnetPosition.x < Math.abs(tacka.x+0.75) ){

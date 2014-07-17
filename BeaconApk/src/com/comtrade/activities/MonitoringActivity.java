@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.android.devicehive.DeviceData;
 import com.comtrade.client.BaseActivity;
 import com.comtrade.client.SampleDeviceClient;
+import com.comtrade.device.BeaconApkConfig;
 import com.comtrade.ilserver.tasks.Space;
 import com.comtrade.map.MapFrame;
 import com.example.beaconapk.R;
@@ -69,7 +70,8 @@ public class MonitoringActivity extends BaseActivity {
 		}
 
 		sampleDeviceClient = new SampleDeviceClient(this, device);
-
+		sampleDeviceClient.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
+		sampleDeviceClient.setAuthorisation("dhadmin", "dhadmin_#911");
 		JSONObject jsonObj;
 		try {
 			jsonObj = new JSONObject(device.getData().toString());
@@ -99,13 +101,13 @@ public class MonitoringActivity extends BaseActivity {
 
 		int x0 = spaceS.getSpaceCoordinates().get(0).getX();
 		int y0 = spaceS.getSpaceCoordinates().get(0).getY();
-		
+
 
 		Log.d("AA", ""+x+" "+y);
 		mapF.getTouchView().getDot().setxCoor((float)x*100);
 		mapF.getTouchView().getDot().setyCoor((float)y*100);
 		mapF.getTouchView().invalidate();
-		
+
 		mapF.setMapImage(d, x0, y0, w,h);		
 		setContentView(mapF);
 
@@ -150,25 +152,29 @@ public class MonitoringActivity extends BaseActivity {
 			public void run() 
 			{
 
-				handler.postDelayed(this, 300);
+				handler.postDelayed(this, 1000);
 
 				sampleDeviceClient.reloadDeviceData();
 				device=sampleDeviceClient.getDevice();
 				JSONObject jsonObj;
-				
+
 				try {
-					jsonObj = new JSONObject(device.getData().toString());
+					jsonObj = new JSONObject(sampleDeviceClient.getDevice().getData().toString());
 					final double newX = (double) jsonObj.get("x");
 					final double newY = (double) jsonObj.get("y");
-					runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							mapF.getTouchView().mDot.setCoordinates((float) (newX/100.0), (float) (newY/100.0));
-						}
-					});
-					
+					Log.d("coors", ""+sampleDeviceClient.getDevice().getData().toString() + "       " + newX) ;
+					if (newX == 0 && newY==0){
+
+					} else {
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								mapF.getTouchView().mDot.setCoordinates((float) (newX), (float) (newY));
+							}
+						});						
+					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -179,6 +185,13 @@ public class MonitoringActivity extends BaseActivity {
 		t = new Thread(r);
 		t.start();
 
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		t.stop();
+		super.onStop();
 	}
 
 	@Override
@@ -201,5 +214,6 @@ public class MonitoringActivity extends BaseActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 
 }
