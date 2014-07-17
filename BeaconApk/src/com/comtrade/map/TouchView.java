@@ -86,7 +86,7 @@ public class TouchView extends View {
 		currContext = context;
 		matrix = new Matrix(); 
 		beaconPositions = new Vector<BeaconRacun>();
-
+		
 		//TODO BeaconRacun
 	}
 	
@@ -111,6 +111,7 @@ public class TouchView extends View {
 	public void setMap(Drawable map, int w, int h) {
 		mMap = map;
 		mMap.setBounds(0, 0, w, h);
+		clipBoundOfCanvas=new Rect(mMap.getBounds().left,mMap.getBounds().top,mMap.getBounds().right, mMap.getBounds().bottom);
 	}
 	
 	/**
