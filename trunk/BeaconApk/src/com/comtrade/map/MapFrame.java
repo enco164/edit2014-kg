@@ -76,9 +76,9 @@ public class MapFrame extends FrameLayout {
 	 * @param w
 	 * @param h
 	 */
-	public void setMapImage(Drawable mapImage, int w, int h) {
+	public void setMapImage(Drawable mapImage,int x0, int y0, int w, int h) {
 		if (mapImage != null){
-			touchView.setMap(mapImage, w, h);
+			touchView.setMap(mapImage, x0, y0, w, h);
 			Log.d("TAG#", mapImage.toString());
 		}
 		else {

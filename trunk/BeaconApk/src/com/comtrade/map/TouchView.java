@@ -6,9 +6,9 @@ import java.util.Vector;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -20,7 +20,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.View;
-import android.widget.Button;
 
 import com.comtrade.ilserver.tasks.BeaconServer;
 import com.comtrade.mathematics.BeaconRacun;
@@ -48,6 +47,7 @@ public class TouchView extends View {
 	private Rect clipBoundOfCanvas;
 	private Vector<BeaconRacun> beaconPositions;	
 	private float zomiranjeSkaliranje=1;
+	private Point mapTranslate;
 	
 	
 	public TouchView(Context context) {
@@ -108,9 +108,10 @@ public class TouchView extends View {
 	 * @param w  
 	 * @param h  
 	 */
-	public void setMap(Drawable map, int w, int h) {
+	public void setMap(Drawable map,int x0, int y0, int w, int h) {
 		mMap = map;
-		mMap.setBounds(0, 0, w, h);
+		mapTranslate = new Point(x0, y0);
+		mMap.setBounds(0, 0, w-x0, h-y0);
 		clipBoundOfCanvas=new Rect(mMap.getBounds().left,mMap.getBounds().top,mMap.getBounds().right, mMap.getBounds().bottom);
 	}
 	
@@ -141,10 +142,14 @@ public class TouchView extends View {
 		float min = pom < pom1? pom : pom1;
 		scaleRatio = min;
 		canvas.concat(matrix);
-		canvas.scale(scaleRatio, scaleRatio);
+		canvas.scale(scaleRatio, scaleRatio); 
 		
 		//crtanje mape i logoa 
+		canvas.save();
+		canvas.translate(-mapTranslate.x, -mapTranslate.y);
 		mMap.draw(canvas);
+		canvas.restore();
+		
 		mDot.draw(canvas);
 		
 		//iscrtavanje beacona

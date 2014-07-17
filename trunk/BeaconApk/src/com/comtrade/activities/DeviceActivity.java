@@ -124,11 +124,16 @@ RegistrationListener, SensorEventListener{
 		Log.d("TAG@", d.toString());
 		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, ""));
+		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, "1"));
 		Log.d("daljina", ""+daljina);
+		
+		
 		int w = spaceS.getSpaceCoordinates().get(1).getX();
 		int h = spaceS.getSpaceCoordinates().get(1).getY();
-		mapFrame.setMapImage(d,w,h);		
+		int x0 = spaceS.getSpaceCoordinates().get(0).getX();
+		int y0 = spaceS.getSpaceCoordinates().get(0).getY();
+		
+		mapFrame.setMapImage(d,x0, y0, w,h);		
 		
 		Log.d("Device", "" + w);
 		Log.d("Device", "" + h);
@@ -190,7 +195,10 @@ RegistrationListener, SensorEventListener{
 								if(Utils.computeAccuracy(discoveredBeacons.get(j)) < daljina){
 									DecimalFormat df = new DecimalFormat("#.##");		
 									//"Closest iBeacon is approximately " + df.format(Utils.computeAccuracy(discoveredBeacons.get(0)))+" meters away"
-									postNotification(VratiIdBikona(discoveredBeacons.get(j)), VratiPorukuBikona(discoveredBeacons.get(j)));
+									int idNotifikacije = VratiIdBikona(discoveredBeacons.get(j));
+									if (idNotifikacije != -1){
+										postNotification(VratiIdBikona(discoveredBeacons.get(j)), VratiPorukuBikona(discoveredBeacons.get(j)));
+									}
 								}
 							}	
 								
@@ -339,7 +347,7 @@ RegistrationListener, SensorEventListener{
 							addParameter("y", tacka.y);
 							sendDeviceDataNotification();
 							Log.d(TAG, ""+tacka.x + " " + tacka.y);
-							mapFrame.getTouchView().getDot().setCoordinates(tacka.x*100, tacka.y*100);
+							//mapFrame.getTouchView().getDot().setCoordinates(tacka.x*100, tacka.y*100);
 						}
 
 					}
@@ -407,7 +415,7 @@ RegistrationListener, SensorEventListener{
 		super.onResume();
 		//podesavanje vremena skeniranja
 		beaconManager.setBackgroundScanPeriod(Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")), Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")));
-		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, ""));
+		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, "1"));
 		Log.d("daljina", ""+daljina);
 		//omogucavanje i onemogucavanje kompasa
 		Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));

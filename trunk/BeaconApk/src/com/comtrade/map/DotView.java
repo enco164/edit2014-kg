@@ -51,9 +51,9 @@ public class DotView extends View{
 		super.onDraw(canvas);
 
 		canvas.save();
+		canvas.drawCircle(xCoor, yCoor, preciznost, paint);
 		canvas.translate(-getW() / 2, -getH() / 2);
 		canvas.translate(xCoor, yCoor);
-		canvas.drawCircle(xCoor, yCoor, preciznost, paint);
 		logo.draw(canvas);
 
 		canvas.restore();
