@@ -187,10 +187,18 @@ RegistrationListener, SensorEventListener{
 						if(discoveredBeacons.size() > 0){
 						
 							Log.d("PSA", "pp "+ Utils.computeAccuracy(discoveredBeacons.get(0)));
-							if(Utils.computeAccuracy(discoveredBeacons.get(0)) < 1.0f){
-								DecimalFormat df = new DecimalFormat("#.##");
-								postNotification("Daljina najblizeg: " + df.format(Utils.computeAccuracy(discoveredBeacons.get(0))));
-							}
+							
+							
+								//za svaki beacon na manje od 1 m salje notifikaciju
+								for (int j = 0; j < discoveredBeacons.size(); j++) {
+									if(Utils.computeAccuracy(discoveredBeacons.get(0)) < 1.0f){
+									DecimalFormat df = new DecimalFormat("#.##");		
+									//"Closest iBeacon is approximately " + df.format(Utils.computeAccuracy(discoveredBeacons.get(0)))+" meters away"
+									postNotification(VratiIdBikona(discoveredBeacons.get(j)), VratiPorukuBikona(discoveredBeacons.get(j)));
+									}
+								}	
+								
+							
 							if(discoveredBeacons.size()>2){
 								//ovde moze
 							}
@@ -213,17 +221,6 @@ RegistrationListener, SensorEventListener{
 							@Override
 							public void run() {
 								
-								int br=0;
-								for (Beacon beacon : discoveredBeacons) {
-									br++;
-								}
-								if (br!=0){
-									
-									double distanca = Math.round(Utils.computeAccuracy(discoveredBeacons.get(0)));
-									if(distanca<=1.0f)
-										postNotification("iBeacon is approximately "+distanca+" meters away.");								
-								}
-								
 								updateMap();
 							
 							}
@@ -243,7 +240,7 @@ RegistrationListener, SensorEventListener{
 			@Override
 			public void onExitedRegion(Region arg0) {
 				
-				Toast.makeText(getApplicationContext(), "Izasao", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Out of region", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -267,12 +264,33 @@ RegistrationListener, SensorEventListener{
 		return null;
 	}
 
-	private void postNotification(String msg) {
+	private int VratiIdBikona(Beacon b)
+	{
+		for (BeaconServer izProstora : listaBikonaIzProstora) {											
+			if(izProstora.getMac().equalsIgnoreCase(b.getMacAddress())){
+				return izProstora.getId();
+			}
+		}
+		return -1;
+	}
+	
+	private String VratiPorukuBikona(Beacon b)
+	{
+		for (BeaconServer izProstora : listaBikonaIzProstora) {											
+			if(izProstora.getMac().equalsIgnoreCase(b.getMacAddress())){
+				return izProstora.getDescription();
+			}
+		}
+		return "";
+		
+	}
+	
+	private void postNotification(int id, String msg) {				
 		Notification.Builder notification = new Notification.Builder(this)
 		.setSmallIcon(R.drawable.beacon_gray)
-		.setContentTitle("iBeacon Proximity")
-		.setContentText(msg);
-		notificationManager.notify(1, notification.build());
+		.setContentTitle(spaceS.getTitle())//space
+		.setContentText(msg);//massage iz bikona
+		notificationManager.notify(id, notification.build());
 		
 	}
 
