@@ -281,27 +281,21 @@ public class TouchView extends View {
 		
 		@Override
 		public boolean onDown(MotionEvent e) {
-			// TODO Auto-generated method stub
-			
-			//Log.d("A","OnDown");
 			return true;
 		}
 
 		@Override
 		public void onShowPress(MotionEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-			// TODO Auto-generated method stub
 			
 			//Log.d("B", "OnScroll "+distanceX+" "+distanceY);
 			//Log.d("M1", matrix.toString());
@@ -313,32 +307,27 @@ public class TouchView extends View {
 
 		@Override
 		public void onLongPress(MotionEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 				float velocityY) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
 		public boolean onDoubleTap(MotionEvent e) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
 		public boolean onDoubleTapEvent(MotionEvent e) {
-			// TODO Auto-generated method stub
 			matrix.reset();
 			zomiranjeSkaliranje = 1;
 			invalidate();
@@ -351,7 +340,6 @@ public class TouchView extends View {
 
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
-			// TODO Auto-generated method stub
 			Log.d("Scale",Float.toString(detector.getScaleFactor()));
 			zomiranjeSkaliranje*=detector.getScaleFactor();
 			
@@ -371,13 +359,11 @@ public class TouchView extends View {
 
 		@Override
 		public boolean onScaleBegin(ScaleGestureDetector detector) {
-			// TODO Auto-generated method stub
 			return true;
 		}
 
 		@Override
 		public void onScaleEnd(ScaleGestureDetector detector) {
-			// TODO Auto-generated method stub
 		}
 		
 	}
