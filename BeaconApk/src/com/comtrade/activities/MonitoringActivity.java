@@ -97,12 +97,15 @@ public class MonitoringActivity extends BaseActivity {
 		
 		int w = spaceS.getSpaceCoordinates().get(1).getX();
 		int h = spaceS.getSpaceCoordinates().get(1).getY();
+		int x0 = spaceS.getSpaceCoordinates().get(0).getX();
+		int y0 = spaceS.getSpaceCoordinates().get(0).getY();
 		
 		Log.d("AA", ""+x+" "+y);
 		mapF.getTouchView().getDot().setxCoor((float)x*100);
 		mapF.getTouchView().getDot().setyCoor((float)y*100);
 		mapF.getTouchView().invalidate();
-		mapF.setMapImage(d,w,h);		
+		
+		mapF.setMapImage(d, x0, y0, w,h);		
 		setContentView(mapF);
 		
 		

@@ -167,7 +167,6 @@ public class LoginActivity extends Activity{
 		tmp=sharedPref.getString(BeaconApkConfig.SHARE_PASSWORD, null);
 		if(tmp!=null){txtPassword.setText(tmp);}
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -188,7 +187,6 @@ public class LoginActivity extends Activity{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 	
 	//funkcija za prikazivanje dialoga i odvodjenje na odgovarajuci activity
 	public void onUserLogin() {

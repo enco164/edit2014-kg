@@ -209,11 +209,7 @@ public class GuideActivity extends Activity {
 	@Override
 	protected void onStop() {
 		//Ovo mozda treba u onDestroy() :D
-		try {
-			beaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
-		} catch (RemoteException e) {
-			//e.printStackTrace();
-		}
+	
 		super.onStop();
 	}
 
