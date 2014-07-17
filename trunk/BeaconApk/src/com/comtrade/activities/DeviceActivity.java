@@ -146,7 +146,7 @@ RegistrationListener, SensorEventListener{
 		String deviceId=user.getUuid();
 		String deviceName=user.getFirstname()+" "+user.getSurname();
 		String deviceKey="4D6B0A4A-CA77-4164-AAB0-52A7FE3DBD76";
-		String deviceStatus=DeviceData.DEVICE_STATUS_ONLINE;
+		
 		
 
 		Network network = new Network(spaceS.getTitle(), spaceS.getTitle(), spaceS.getTitle());
@@ -341,13 +341,13 @@ RegistrationListener, SensorEventListener{
 			if(tacka != null && !Float.isNaN(tacka.x) && !Float.isNaN(tacka.y)){
 				runOnUiThread(new Runnable() {
 					public void run() {
-						if (tacka.x != currnetPosition.x || tacka.y != currnetPosition.y){
+						if (currnetPosition.x < Math.abs(tacka.x+ 0.75) || currnetPosition.x < Math.abs(tacka.x+0.75) ){
 							parameters.clear();
 							addParameter("x", tacka.x);
 							addParameter("y", tacka.y);
 							sendDeviceDataNotification();
 							Log.d(TAG, ""+tacka.x + " " + tacka.y);
-							//mapFrame.getTouchView().getDot().setCoordinates(tacka.x*100, tacka.y*100);
+							mapFrame.getTouchView().getDot().setCoordinates(tacka.x, tacka.y);
 						}
 
 					}
@@ -361,8 +361,9 @@ RegistrationListener, SensorEventListener{
 
 	private void sendDeviceDataNotification() {
 		HashMap<String, Object> parameters = paramsAsMap(this.parameters);
-		//device.getDeviceData().setData(parameters);
-		//device.registerDevice();
+		
+		device.getDeviceData().setData(parameters);
+		device.registerDevice();
 		//Log.d(TAG, ""+device.getDeviceData().getData().toString());
 	}
 
@@ -569,11 +570,12 @@ RegistrationListener, SensorEventListener{
 		this.parameters.add(new Parameter(name, value));
 	}
 
-	private static HashMap<String, Object> paramsAsMap(List<Parameter> params) {
+	private HashMap<String, Object> paramsAsMap(List<Parameter> params) {
 		HashMap<String, Object> paramsMap = new HashMap<String, Object>();
 		for (Parameter param : params) {
 			paramsMap.put(param.name, param.value);
 		}
+		paramsMap.put("spaceId", spaceS.getId());
 		return paramsMap;
 	}
 

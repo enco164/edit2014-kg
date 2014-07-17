@@ -87,20 +87,20 @@ public class Space implements Parcelable{
 	public final static String JSON_KEY_UUID = "_uuid";
 	public final static String JSON_KEY_VERSION = "_version";
 	public final static String JSON_KEY_TITLE = "spaceTitle";
-	public final static String JSON_KEY_DATA = "data";
 	public final static String JSON_KEY_DESCRIPTION = "description";
+	public final static String JSON_KEY_WELCOMEMESSEGE = "welcomeMessage";
 	public final static String JSON_KEY_MAPADDRESS = "mapUrl";
 	public final static String JSON_KEY_BEACONLIST = "iBeacons";
 	public final static String JSON_KEY_COOLIST = "coordinates";
 	
 	
 	private int id, version;
-	private String uuid, title, description, mapAddress;
+	private String uuid, title, description, welcomeMessage, mapAddress;
 	private ArrayList<BeaconServer> beacons;
 	private ArrayList<SpaceCoordinate> spaceCoordinates;
 	
 	public Space(int id, String uuid, int version, String title,
-			String description, String mapAddress,
+			String description, String welcomeMessage, String mapAddress,
 			ArrayList<BeaconServer> beacons,
 			ArrayList<SpaceCoordinate> spaceCoordinates) {
 		super();
@@ -109,6 +109,7 @@ public class Space implements Parcelable{
 		this.title = title;
 		this.uuid = uuid;
 		this.description = description;
+		this.welcomeMessage = welcomeMessage;
 		this.mapAddress = mapAddress;
 		this.beacons = beacons;
 		this.spaceCoordinates = spaceCoordinates;
@@ -141,6 +142,10 @@ public class Space implements Parcelable{
 	}
 
 
+	public String getWelcomeMessage() {
+		return welcomeMessage;
+	}
+
 
 	public String getMapAddress() {
 		return mapAddress;
@@ -162,19 +167,11 @@ public class Space implements Parcelable{
 		this.uuid = source.readString();
 		this.version = source.readInt();
 		this.title = source.readString();
+		this.description = source.readString();
+		this.welcomeMessage = source.readString();
 		this.mapAddress = source.readString();
 		this.beacons = source.readArrayList(BeaconServer.class.getClassLoader());
 		this.spaceCoordinates = source.readArrayList(SpaceCoordinate.class.getClassLoader());
-		String data = source.readString();
-		try {
-			if (data!=null || !data.equals(null)){
-			JSONObject dataJson = new JSONObject(data);
-			this.description=dataJson.getString(JSON_KEY_DESCRIPTION);}
-			else this.description="";
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	
@@ -201,15 +198,8 @@ public class Space implements Parcelable{
 				SpaceCoordinate spaceS = SpaceCoordinate.fromJSON(cooObject.get(i).toString());
 				listaCoo.add(spaceS);
 			}
-			// desc
-			String jsonDesc= jsonObj.getString(JSON_KEY_DATA);
-			String description="";
-			if (jsonDesc!=null || !jsonDesc.equals("")){
-				JSONObject data= new JSONObject(jsonDesc);
-				description= data.getString(JSON_KEY_DESCRIPTION);
-			}
-			Log.d("DEsce",description+" "+jsonDesc);
-			return new Space(id, uuid, version, title,description , mapA, listaBeacona, listaCoo);
+			
+			return new Space(id, uuid, version, title, "", "", mapA, listaBeacona, listaCoo);
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -230,10 +220,11 @@ public class Space implements Parcelable{
 		dest.writeString(uuid);
 		dest.writeInt(version);
 		dest.writeString(title);
+		dest.writeString(description);
+		dest.writeString(welcomeMessage);
 		dest.writeString(mapAddress);
 		dest.writeList(beacons);
 		dest.writeList(spaceCoordinates);
-		dest.writeString("{\"description\":\""+description+"\"}");
 	}
 	
 	public static Parcelable.Creator<Space> CREATOR = new Parcelable.Creator<Space>() {

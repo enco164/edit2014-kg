@@ -107,7 +107,7 @@ public class GuideActivity extends Activity {
 								i.putExtra("space", spaceS);
 								i.putExtra(User.EXTRA, user);
 								
-								Log.d("GuideActivity", spaceS.getTitle());
+								//Log.d("GuideActivity", spaceS.getTitle());
 								
 
 								new Thread(new Runnable() {
