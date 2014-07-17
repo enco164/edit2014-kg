@@ -366,10 +366,10 @@ RegistrationListener, SensorEventListener{
 		super.onResume();
 		
 		//register shared preferences listener
+		Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
 		if(sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true) == true){
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
 					SensorManager.SENSOR_DELAY_GAME);
-			Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
 		}
 		else{
 			mSensorManager.unregisterListener(this);

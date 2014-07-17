@@ -19,6 +19,7 @@
     <CheckBoxPreference
         android:key="compasOnOff"
         android:title="Compas"
+        android:defaultValue="false"
 	/>
     <ListPreference
         android:key="prefDataSend"
