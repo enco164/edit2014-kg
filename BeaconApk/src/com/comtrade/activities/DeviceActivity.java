@@ -73,7 +73,8 @@ RegistrationListener, SensorEventListener{
 	public SharedPreferences sherP;
 	public Space spaceS;
 	PointF currnetPosition;
-
+	private int daljina; //daljina na koju ce da izbacuje notifikacije
+	
 	private BeaconManager beaconManager;
 	private List<Beacon> listaBikonaSkeniranih;
 	private ArrayList<BeaconServer> listaBikonaIzProstora;
@@ -106,6 +107,7 @@ RegistrationListener, SensorEventListener{
 		mapFrame = new MapFrame(getApplicationContext());
 		setContentView(mapFrame);
 	
+		currnetPosition = new PointF();
 		Intent i = getIntent();
 		spaceS = (Space) 	i.getParcelableExtra("space");
 		sherP = PreferenceManager.getDefaultSharedPreferences(this);
@@ -120,7 +122,8 @@ RegistrationListener, SensorEventListener{
 		Log.d("TAG@", d.toString());
 		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		
+		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, ""));
+		Log.d("daljina", ""+daljina);
 		int w = spaceS.getSpaceCoordinates().get(1).getX();
 		int h = spaceS.getSpaceCoordinates().get(1).getY();
 		mapFrame.setMapImage(d,w,h);		
@@ -179,26 +182,25 @@ RegistrationListener, SensorEventListener{
 			public void onBeaconsDiscovered(Region region, final List<Beacon> discoveredBeacons) {
 				listaBikonaSkeniranih = discoveredBeacons;
 				
-				
 				Log.d("PSA", "pp ");
 				// Note that results are not delivered on UI thread.
 				runOnUiThread(new Runnable() {
 					public void run() {
+						Log.d("PSA", "pp "+ discoveredBeacons.size());
 						if(discoveredBeacons.size() > 0){
 						
 							Log.d("PSA", "pp "+ Utils.computeAccuracy(discoveredBeacons.get(0)));
 							
-							
-								//za svaki beacon na manje od 1 m salje notifikaciju
-								for (int j = 0; j < discoveredBeacons.size(); j++) {
-									if(Utils.computeAccuracy(discoveredBeacons.get(0)) < 1.0f){
+							//za svaki beacon na manje od 1 m salje notifikaciju
+							for (int j = 0; j < discoveredBeacons.size(); j++) {
+								Log.d("NOTIFIKACIJe",""+ Utils.computeAccuracy(discoveredBeacons.get(j)));
+								if(Utils.computeAccuracy(discoveredBeacons.get(j)) < daljina){
 									DecimalFormat df = new DecimalFormat("#.##");		
 									//"Closest iBeacon is approximately " + df.format(Utils.computeAccuracy(discoveredBeacons.get(0)))+" meters away"
 									postNotification(VratiIdBikona(discoveredBeacons.get(j)), VratiPorukuBikona(discoveredBeacons.get(j)));
-									}
-								}	
+								}
+							}	
 								
-							
 							if(discoveredBeacons.size()>2){
 								//ovde moze
 							}
@@ -343,7 +345,7 @@ RegistrationListener, SensorEventListener{
 							addParameter("y", tacka.y);
 							sendDeviceDataNotification();
 							Log.d(TAG, ""+tacka.x + " " + tacka.y);
-							mapFrame.getDotView().setCoordinates(tacka.x*100, tacka.y*100);
+							mapFrame.getTouchView().getDot().setCoordinates(tacka.x*100, tacka.y*100);
 						}
 
 					}
@@ -411,7 +413,8 @@ RegistrationListener, SensorEventListener{
 		super.onResume();
 		//podesavanje vremena skeniranja
 		beaconManager.setBackgroundScanPeriod(Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")), Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")));
-
+		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, ""));
+		Log.d("daljina", ""+daljina);
 		//omogucavanje i onemogucavanje kompasa
 		Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
 		if(sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true) == true){
