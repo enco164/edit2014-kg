@@ -89,12 +89,13 @@ public class LoginActivity extends Activity{
 							Toast.makeText(getApplicationContext(), "Bad server", Toast.LENGTH_SHORT).show();
 						}
 						else{
-							User userLogovan = User.fromJSON(UserJSON);
+							userLogovan = User.fromJSON(UserJSON);
 							ArrayList<String> roles = userLogovan.getRoles();
 							
 							if(roles.size() == 1){
 								if(roles.get(0).toString().equals("client")){
 									Intent i = new Intent(LoginActivity.this, GuideActivity.class);
+									i.putExtra(User.EXTRA, userLogovan);
 									startActivity(i);
 								}
 								else{
