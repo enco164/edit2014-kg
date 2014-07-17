@@ -42,6 +42,7 @@
         <activity
             android:name="com.comtrade.activities.GuideActivity"
             android:label="@string/title_activity_guide"
+            android:noHistory="true"
             android:parentActivityName="com.comtrade.activities.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

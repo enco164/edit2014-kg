@@ -11,13 +11,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" 
-        android:theme="@style/AppBaseTheme">
+        android:label="@string/app_name"
+        android:theme="@style/AppBaseTheme" >
         <activity
             android:name="com.comtrade.activities.SettingsActivity"
             android:label="Settings" >
@@ -35,25 +35,25 @@
             android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.comtrade.activities.GuideActivity"
             android:label="@string/title_activity_guide"
+            android:noHistory="true"
             android:parentActivityName="com.comtrade.activities.LoginActivity" >
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.comtrade.ctibclient.sign.LoginActivity" />
         </activity>
-        <activity 
+        <activity
             android:name="com.comtrade.activities.DeviceActivity"
-            android:label="@string/title_activity_device" >
+            android:label="@string/title_activity_device" 
+            android:screenOrientation="portrait">
         </activity>
-        
-        
-        
+
         <!-- Services -->
         <service
             android:name="com.estimote.sdk.service.BeaconService"
@@ -65,7 +65,18 @@
             android:name="com.android.devicehive.network.DeviceHiveApiService"
             android:exported="false" />
 
-                
+        <activity
+            android:name="com.comtrade.activities.SpacesActivity"
+            android:label="@string/title_activity_spaces" >
+        </activity>
+        <activity
+            android:name="com.comtrade.activities.SpaceDevicesActivity"
+            android:label="@string/title_activity_space_devices" >
+        </activity>
+        <activity
+            android:name="com.comtrade.activities.MonitoringActivity"
+            android:label="@string/title_activity_monitoring" >
+        </activity>
     </application>
 
 </manifest>

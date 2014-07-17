@@ -3,6 +3,7 @@ package com.comtrade.client;
 import android.app.Application;
 
 import com.android.devicehive.DeviceData;
+import com.comtrade.device.BeaconApkConfig;
 import com.example.beaconapk.BuildConfig;
 
 public class SampleClientApplication extends Application {
@@ -41,8 +42,9 @@ public class SampleClientApplication extends Application {
 	private SampleDeviceClient getClientForDevice(DeviceData device) {
 		SampleDeviceClient client = new SampleDeviceClient(
 				getApplicationContext(), device);
-		client.setApiEnpointUrl("http://nn5964.pg.devicehive.com/api");
-		client.setAuthorisation("admin", "comtrade");
+		
+		client.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
+		client.setAuthorisation("dhadmin", "dhadmin_#911");
 		client.setDebugLoggingEnabled(BuildConfig.DEBUG);
 		return client;
 	}

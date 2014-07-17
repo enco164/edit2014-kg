@@ -18,7 +18,7 @@
     
     <CheckBoxPreference
         android:key="compasOnOff"
-        android:title="Compas"
+        android:title="Compass"
         android:defaultValue="false"
 	/>
     <ListPreference
