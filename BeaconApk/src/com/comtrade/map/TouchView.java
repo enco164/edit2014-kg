@@ -134,32 +134,20 @@ public class TouchView extends View {
 		///PODESAVANJE SCALE RATIO
 		int width = getMeasuredWidth();
 		int height = getMeasuredHeight();
-
 		getLocationInWindow(nizDim);
-		
 		float pom = height*1.0f/mMap.getBounds().height();
 		float pom1 = width*1.0f/mMap.getBounds().width();
-		
 		float min = pom < pom1? pom : pom1;
 		scaleRatio = min;
-		//Log.d("Scale", "" + scaleRatio);
-		//////////
-		//zomiranjeSkaliranje=min;
-		//canvas.translate(0, nizDim[1]);
-		
-		//Log.d("C1", canvas.toString());
 		canvas.concat(matrix);
 		canvas.scale(scaleRatio, scaleRatio);
-		//Log.d("C2", canvas.toString());
+		
+		//crtanje mape i logoa 
 		mMap.draw(canvas);
 		mDot.draw(canvas);
-
-		clipBoundOfCanvas = canvas.getClipBounds();
-
-		//crtanje kruga oko logoa
-
-	
 		
+		//iscrtavanje beacona
+		clipBoundOfCanvas = canvas.getClipBounds();
 		for (BeaconView bc : listBeacona) {
 			bc.draw(canvas);
 		}
