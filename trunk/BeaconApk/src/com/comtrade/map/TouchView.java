@@ -32,11 +32,8 @@ import com.example.beaconapk.R;
 public class TouchView extends View {
 	
 	private Drawable mMap;
-	
 	protected Context currContext;
-	
 	public Matrix matrix;
-
 	public DotView mDot;
 	public BeaconView mBeacon;
 	protected GestureDetector gestureDetector;
@@ -44,18 +41,17 @@ public class TouchView extends View {
 	protected ScaleGestureDetector scaleGestureDetector;
 	protected ScaleGestureDetector.OnScaleGestureListener scaleGestureDetectorListener;
 	protected Drawable iBeacon;
-	private Button dugme;
 	private float scaleRatio;
 	private int nizDim[] = new int[2];
-	private Matrix m;
 	public ArrayList<BeaconView> listBeacona = new ArrayList<>();
 	public Paint paint;
 	private Rect clipBoundOfCanvas;
 	private Vector<BeaconRacun> beaconPositions;	
 	private float zomiranjeSkaliranje=1;
+	
+	
 	public TouchView(Context context) {
 		this(context, null, 0, new DotView(context));
-
 	}
 
 	public TouchView(Context context, AttributeSet attrs) {
@@ -90,9 +86,7 @@ public class TouchView extends View {
 		currContext = context;
 		matrix = new Matrix(); 
 		beaconPositions = new Vector<BeaconRacun>();
-		paint = new Paint();
-		paint.setColor(Color.RED);
-		paint.setAlpha(40);
+
 		//TODO BeaconRacun
 	}
 	
@@ -164,7 +158,7 @@ public class TouchView extends View {
 
 		//crtanje kruga oko logoa
 
-		canvas.drawCircle(mDot.getxCoor(), mDot.getyCoor(), 100, paint);
+	
 		
 		for (BeaconView bc : listBeacona) {
 			bc.draw(canvas);
