@@ -61,8 +61,9 @@ public class MonitoringActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mapF= new MapFrame(getApplicationContext());
-		setContentView(mapF);
+		mapF= new MapFrame(this);
+		
+		
 		
 		device = getIntent().getExtras().getParcelable("device");
 		if (device == null) {
@@ -98,9 +99,11 @@ public class MonitoringActivity extends BaseActivity {
 		int h = spaceS.getSpaceCoordinates().get(1).getY();
 		
 		Log.d("AA", ""+x+" "+y);
-		mapF.getTouchView().setDotCoordinates((float)x, (float)y);
+		mapF.getTouchView().getDot().setxCoor((float)x*100);
+		mapF.getTouchView().getDot().setyCoor((float)y*100);
+		mapF.getTouchView().invalidate();
 		mapF.setMapImage(d,w,h);		
-		
+		setContentView(mapF);
 		
 		
 	}

@@ -31,8 +31,8 @@ public class DotView extends View{
 		w = 30;
 		h = 30;
 		this.parentView = parentView;
-		xCoor = 50;
-		yCoor = 50;
+		xCoor = 0;
+		yCoor = 0;
 		this.animationDuration = 500;		
 	}
 	

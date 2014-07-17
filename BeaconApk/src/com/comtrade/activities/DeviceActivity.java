@@ -131,19 +131,19 @@ RegistrationListener, SensorEventListener{
 	    // initialize your android device sensor capabilities
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
-		User user=(User)getIntent().getExtras().get(BeaconApkConfig.SHARE_USER);
-		Space space=(Space)getIntent().getExtras().get(BeaconApkConfig.SHARE_SPACE);
-		
-		String deviceId=user.getUuid();
-		String deviceName=user.getFirstname()+" "+user.getSurname();
-		String deviceKey="4D6B0A4A-CA77-4164-AAB0-52A7FE3DBD76";
-		String deviceStatus=DeviceData.DEVICE_STATUS_ONLINE;
-		
-		Network network=new Network(space.getTitle(), space.getDescription());
-		DeviceClass deviceClass=new DeviceClass("Indoor location device", "1.1");
-		
-		DeviceData deviceData=new DeviceData(deviceId, deviceKey, deviceName, deviceStatus, network, deviceClass);
-		device=new TestDevice(getApplicationContext(),deviceData, new TestEquipment());
+//		User user=(User)getIntent().getExtras().get(BeaconApkConfig.SHARE_USER);
+//		Space space=(Space)getIntent().getExtras().get(BeaconApkConfig.SHARE_SPACE);
+//		
+//		String deviceId=user.getUuid();
+//		String deviceName=user.getFirstname()+" "+user.getSurname();
+//		String deviceKey="4D6B0A4A-CA77-4164-AAB0-52A7FE3DBD76";
+//		String deviceStatus=DeviceData.DEVICE_STATUS_ONLINE;
+//		
+//		Network network=new Network(space.getTitle(), space.getDescription());
+//		DeviceClass deviceClass=new DeviceClass("Indoor location device", "1.1");
+//		
+//		DeviceData deviceData=new DeviceData(deviceId, deviceKey, deviceName, deviceStatus, network, deviceClass);
+//		device=new TestDevice(getApplicationContext(),deviceData, new TestEquipment());
 		//Setting up DeviceHive
 		parameters = new LinkedList<Parameter>();
 		
@@ -312,9 +312,9 @@ RegistrationListener, SensorEventListener{
 
 	private void sendDeviceDataNotification() {
 		HashMap<String, Object> parameters = paramsAsMap(this.parameters);
-		device.getDeviceData().setData(parameters);
-		device.registerDevice();
-		Log.d(TAG, ""+device.getDeviceData().getData().toString());
+		//device.getDeviceData().setData(parameters);
+		//device.registerDevice();
+		//Log.d(TAG, ""+device.getDeviceData().getData().toString());
 	}
 
 
@@ -378,13 +378,13 @@ RegistrationListener, SensorEventListener{
 	
 
 		//Device
-		device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
-		device.addDeviceListener(this);
-		if (!device.isRegistered()) { 
-			device.registerDevice();
-		} else {
-			device.startProcessingCommands();
-		}
+		//device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
+		//device.addDeviceListener(this);
+		//if (!device.isRegistered()) { 
+			//device.registerDevice();
+		//} else {
+		//	device.startProcessingCommands();
+		//}
 		
 		
 		
@@ -413,7 +413,7 @@ RegistrationListener, SensorEventListener{
 		mSensorManager.unregisterListener(this);
 
 		if (isFinishing()) {
-			device.unregisterDevice();
+			//device.unregisterDevice();
 		}
 	}
 
@@ -433,10 +433,10 @@ RegistrationListener, SensorEventListener{
 	@Override
 	protected void onDestroy() {
 		// disconnect device 
-		device.removeDeviceListener(this);
+		//device.removeDeviceListener(this);
 		
 		if (isFinishing()) {
-			device.unregisterDevice();
+			//device.unregisterDevice();
 		}
 		// iBeacoons
 		beaconManager.disconnect();
@@ -467,7 +467,7 @@ RegistrationListener, SensorEventListener{
 					@Override
 					public void onClick(DialogInterface dialog,
 							int which) {
-						device.registerDevice();
+						//device.registerDevice();
 					}
 				})
 				.setNegativeButton("Cancel",
@@ -479,7 +479,7 @@ RegistrationListener, SensorEventListener{
 						finishActivity(0);
 					}
 				}).create();
-		dialog.show();
+		//dialog.show();
 	}
 
 
@@ -508,8 +508,8 @@ RegistrationListener, SensorEventListener{
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK) {
 			Log.d(TAG, "Changed settings!");
-			device.unregisterDevice();
-			device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
+			//device.unregisterDevice();
+			//device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
 		}
 	}
 
