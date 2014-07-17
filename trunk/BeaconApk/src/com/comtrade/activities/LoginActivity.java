@@ -75,6 +75,11 @@ public class LoginActivity extends Activity{
 					if(!newUrl.contains("http://")){
 						newUrl="http://"+newUrl;
 					}
+					Log.d("newurl1", newUrl);
+					if(!newUrl.contains(":8080/ils")){
+						newUrl+=":8080/ils";
+						Log.d("newurl2", newUrl);
+					}
 					if(!newUrl.endsWith("ils")){
 						Log.d("newurl3", newUrl);
 						newUrl=newUrl.trim();
@@ -82,7 +87,6 @@ public class LoginActivity extends Activity{
 					}
 					Log.d("newurl4", newUrl);
 					sharedPrefEditor.putString(BeaconApkConfig.SHARE_URL,newUrl);
-			
 					sharedPrefEditor.putString(BeaconApkConfig.SHARE_USERNAME, txtUsername.getText().toString());
 					sharedPrefEditor.putString(BeaconApkConfig.SHARE_PASSWORD, txtPassword.getText().toString());
 					sharedPrefEditor.apply();
