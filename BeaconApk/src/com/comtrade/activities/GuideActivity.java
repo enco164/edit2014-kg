@@ -100,10 +100,10 @@ public class GuideActivity extends Activity {
 								
 								task2.execute(sharedPref.getString(BeaconApkConfig.SHARE_URL, null)+"/rest/getSpace");
 								spaceS = Space.fromJSON(task2.get());
-								//User user=(User)getIntent().getExtras().get(BeaconApkConfig.SHARE_USER);
+								User user=(User)getIntent().getParcelableExtra(User.EXTRA);
 								i = new Intent(GuideActivity.this, DeviceActivity.class);
 								i.putExtra("space", spaceS);
-								//i.putExtra(BeaconApkConfig.SHARE_USER, user);
+								i.putExtra(User.EXTRA, user);
 								
 								Log.d("GuideActivity", spaceS.getTitle());
 								
