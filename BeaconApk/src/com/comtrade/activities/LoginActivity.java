@@ -185,7 +185,7 @@ public class LoginActivity extends Activity{
 						//TODO ovde ide akcija ukoliko se izabere obican korisnik
 						//Toast.makeText(getApplicationContext(), "USER ROLA", Toast.LENGTH_LONG).show();
 						Intent i = new Intent(LoginActivity.this, GuideActivity.class);
-						i.putExtra("korisnik", userLogovan);
+						i.putExtra(User.EXTRA, userLogovan);
 						startActivity(i);
 					}
 				})
