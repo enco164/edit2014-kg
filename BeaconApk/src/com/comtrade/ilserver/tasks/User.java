@@ -8,44 +8,42 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * User class represents user of a system <br/>
  * example json: <br/>
  * 
- * {	<br/>
- * 		"_id":1, <br/>
- * 		"_uuid":"c319a5c3-0bdc-40dc-b46e-a07fadabd7ec", <br/>
- * 		"firstName":"Initial", <br/>
- * 		"surname":"Administrator", <br/>
- * 		"username":"admin", <br/>
- * 		"roles":["admin"] <br/>
+ * { <br/>
+ * "_id":1, <br/>
+ * "_uuid":"c319a5c3-0bdc-40dc-b46e-a07fadabd7ec", <br/>
+ * "firstName":"Initial", <br/>
+ * "surname":"Administrator", <br/>
+ * "username":"admin", <br/>
+ * "roles":["admin" , "client", "bla"] <br/>
  * }
  */
 
-public class User implements Parcelable{
-	
-	public static final String EXTRA = "User";
-	
-	public final static String JSON_KEY_ID = "_id";
-	public final static String JSON_KEY_UUID = "_uuid";
-	public final static String JSON_KEY_FIRST_NAME = "firstName";
-	public final static String JSON_KEY_SURNAME = "surname";
-	public final static String JSON_KEY_USERNAME = "username";
-	public final static String JSON_KEY_ROLES = "roles";
-	
-	
+public class User implements Parcelable {
+
+	public static final String JSON_KEY_ID = "_id";
+	public static final String JSON_KEY_UUID = "_uuid";
+	public static final String JSON_KEY_FIRSTNAME = "firstName";
+	public static final String JSON_KEY_SURNAME = "surname";
+	public static final String JSON_KEY_USERNAME = "username";
+	public static final String JSON_KEY_ROLES = "roles";
+	public static final String EXTRA = "UserExtra";
+
 	private int id;
 	private String uuid;
 	private String firstname;
 	private String surname;
 	private String username;
 	private ArrayList<String> roles;
-	
+
 	public User(int id, String uuid, String firstname, String surname,
 			String username, ArrayList<String> roles) {
 		super();
-		
 		this.id = id;
 		this.uuid = uuid;
 		this.firstname = firstname;
@@ -53,37 +51,52 @@ public class User implements Parcelable{
 		this.username = username;
 		this.roles = roles;
 	}
-	
+
 	public User(Parcel source) {
-		source.readInt();
-		source.readString();
-		source.readString();
-		source.readString();
-		source.readString();
-		source.readList(roles, String.class.getClassLoader());
+		this.id = source.readInt();
+		this.uuid = source.readString();
+		this.firstname = source.readString();
+		this.surname = source.readString();
+		this.username = source.readString();
+		this.roles = source.readArrayList(User.class.getClassLoader());
 	}
 
-	public static User fromJSON(String json){
+	public static User fromJSON(String json) {
 		try {
+			
 			JSONObject jsonObj = new JSONObject(json);
+			
+
 			int id = jsonObj.getInt(JSON_KEY_ID);
+
 			String uuid = jsonObj.getString(JSON_KEY_UUID);
-			String firstName = jsonObj.getString(JSON_KEY_FIRST_NAME);
+			String firstname = jsonObj.getString(JSON_KEY_FIRSTNAME);
 			String surname = jsonObj.getString(JSON_KEY_SURNAME);
+
 			String username = jsonObj.getString(JSON_KEY_USERNAME);
-			
-			JSONArray noviA = jsonObj.getJSONArray(JSON_KEY_ROLES);
-			ArrayList<String> listaRoles = new ArrayList<>();
-			
-			for (int i = 0; i < noviA.length(); i++) {
-				listaRoles.add(noviA.get(i).toString());
+			JSONArray rolesJson = jsonObj.getJSONArray(JSON_KEY_ROLES);
+
+			ArrayList<String> roles = new ArrayList<String>();
+
+			for (int i = 0; i < rolesJson.length(); i++) {
+				
+				String obj = rolesJson.get(i).toString();
+				Log.d("TAG",rolesJson.get(i).toString());
+				roles.add(obj);
 			}
 
-			return new User(id, uuid, firstName, surname, username, listaRoles);
+			return new User(id, uuid, firstname, surname, username, roles);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", uuid=" + uuid + ", firstname=" + firstname
+				+ ", surname=" + surname + ", username=" + username
+				+ ", roles=" + roles + "]";
 	}
 
 	public static Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -95,10 +108,11 @@ public class User implements Parcelable{
 
 		@Override
 		public User createFromParcel(Parcel source) {
-			
+
 			return new User(source);
 		}
 	};
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
@@ -108,11 +122,10 @@ public class User implements Parcelable{
 		dest.writeString(username);
 		dest.writeList(roles);
 	}
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
+	
+	
+	
 	
 	public int getId() {
 		return id;
@@ -161,4 +174,43 @@ public class User implements Parcelable{
 	public void setRoles(ArrayList<String> roles) {
 		this.roles = roles;
 	}
+
+	public static Parcelable.Creator<User> getCREATOR() {
+		return CREATOR;
+	}
+
+	public static void setCREATOR(Parcelable.Creator<User> cREATOR) {
+		CREATOR = cREATOR;
+	}
+
+	public static String getJsonKeyId() {
+		return JSON_KEY_ID;
+	}
+
+	public static String getJsonKeyUuid() {
+		return JSON_KEY_UUID;
+	}
+
+	public static String getJsonKeyFirstname() {
+		return JSON_KEY_FIRSTNAME;
+	}
+
+	public static String getJsonKeySurname() {
+		return JSON_KEY_SURNAME;
+	}
+
+	public static String getJsonKeyUsername() {
+		return JSON_KEY_USERNAME;
+	}
+
+	public static String getJsonKeyRoles() {
+		return JSON_KEY_ROLES;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
