@@ -37,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.comtrade.device.BeaconApkConfig;
 import com.comtrade.device.TestDevice;
 import com.comtrade.device.TestDevice.RegistrationListener;
 import com.comtrade.device.TestEquipment;
@@ -106,7 +107,8 @@ RegistrationListener, SensorEventListener{
 		// Setting up Content of Activity
 		mapFrame = new MapFrame(getApplicationContext());
 		setContentView(mapFrame);
-	
+
+		
 		currnetPosition = new PointF();
 		Intent i = getIntent();
 		spaceS = (Space) 	i.getParcelableExtra("space");
@@ -133,31 +135,22 @@ RegistrationListener, SensorEventListener{
 	    // initialize your android device sensor capabilities
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
-		User u = (User) i.getParcelableExtra(User.EXTRA);
+		User user = (User) i.getParcelableExtra(User.EXTRA);
 		Log.d("user" + TAG, "" + i.getParcelableExtra(User.EXTRA));
-		Network network = new Network("novi network", "op");
+		
+		String deviceId=user.getUuid();
+		String deviceName=user.getFirstname()+" "+user.getSurname();
+		String deviceKey="4D6B0A4A-CA77-4164-AAB0-52A7FE3DBD76";
+		String deviceStatus=DeviceData.DEVICE_STATUS_ONLINE;
+		
+
+		Network network = new Network(spaceS.getTitle(), spaceS.getTitle(), spaceS.getTitle());
 		DeviceClass deviceClass = new DeviceClass("Indoor location device",
 				"1.1");
-		deviceData = new DeviceData("164b123a-caaa-4189-a164-5123fe3dbd76",
-				"126B0A4A-CA77-4164-AABb-52A7FE3DBD76", u.getFirstname() + " "
-						+ u.getSurname(), DeviceData.DEVICE_STATUS_ONLINE,
-				network, deviceClass);
+		deviceData = new DeviceData(deviceId, deviceKey	, deviceName, DeviceData.DEVICE_STATUS_ONLINE, network, deviceClass);
+		
 		device = new TestDevice(getApplicationContext(), deviceData, new TestEquipment());
 
-		
-//		User user=(User)getIntent().getExtras().get(BeaconApkConfig.SHARE_USER);
-//		Space space=(Space)getIntent().getExtras().get(BeaconApkConfig.SHARE_SPACE);
-//		
-//		String deviceId=user.getUuid();
-//		String deviceName=user.getFirstname()+" "+user.getSurname();
-//		String deviceKey="4D6B0A4A-CA77-4164-AAB0-52A7FE3DBD76";
-//		String deviceStatus=DeviceData.DEVICE_STATUS_ONLINE;
-//		
-//		Network network=new Network(space.getTitle(), space.getDescription());
-//		DeviceClass deviceClass=new DeviceClass("Indoor location device", "1.1");
-//		
-//		DeviceData deviceData=new DeviceData(deviceId, deviceKey, deviceName, deviceStatus, network, deviceClass);
-//		device=new TestDevice(getApplicationContext(),deviceData, new TestEquipment());
 		//Setting up DeviceHive
 		parameters = new LinkedList<Parameter>();
 		
@@ -273,6 +266,7 @@ RegistrationListener, SensorEventListener{
 				return izProstora.getId();
 			}
 		}
+		Log.d("los id", "ne uzima id");
 		return -1;
 	}
 	
@@ -428,13 +422,13 @@ RegistrationListener, SensorEventListener{
 	
 
 		//Device
-		//device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
-		//device.addDeviceListener(this);
-		//if (!device.isRegistered()) { 
-			//device.registerDevice();
-		//} else {
-		//	device.startProcessingCommands();
-		//}
+		device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
+		device.addDeviceListener(this);
+		if (!device.isRegistered()) { 
+			device.registerDevice();
+		} else {
+			device.startProcessingCommands();
+		}
 		
 		
 		
