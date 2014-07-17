@@ -335,7 +335,7 @@ public class TouchView extends View {
 			zomiranjeSkaliranje*=detector.getScaleFactor();
 			
 			Log.d("ScaleZomiranje",Float.toString(zomiranjeSkaliranje));
-			if(zomiranjeSkaliranje<1 || zomiranjeSkaliranje>2.5){
+			if(zomiranjeSkaliranje<0.75 || zomiranjeSkaliranje>2.5){
 				//ekran je veci od slike
 					zomiranjeSkaliranje/=detector.getScaleFactor();
 			}
