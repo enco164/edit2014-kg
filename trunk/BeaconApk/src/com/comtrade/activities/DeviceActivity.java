@@ -17,7 +17,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -29,7 +28,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -39,26 +37,23 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.comtrade.device.BeaconApkConfig;
 import com.comtrade.device.TestDevice;
 import com.comtrade.device.TestDevice.RegistrationListener;
 import com.comtrade.device.TestEquipment;
 import com.comtrade.ilserver.tasks.BeaconServer;
 import com.comtrade.ilserver.tasks.Space;
 import com.comtrade.ilserver.tasks.User;
-import com.comtrade.map.BeaconView;
 import com.comtrade.map.MapFrame;
 import com.comtrade.mathematics.BeaconRacun;
 import com.comtrade.mathematics.Circle;
 import com.dataart.android.devicehive.DeviceClass;
 import com.dataart.android.devicehive.DeviceData;
 import com.dataart.android.devicehive.Network;
-import com.dataart.android.devicehive.device.Device;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Utils;
 import com.estimote.sdk.BeaconManager.MonitoringListener;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.Utils;
 import com.example.beaconapk.R;
 
 public class DeviceActivity extends Activity implements 
@@ -98,6 +93,7 @@ RegistrationListener, SensorEventListener{
 	
 	SharedPreferences sharedPref;
 	Editor sharedPrefEditor;
+	DeviceData deviceData;
 	TestDevice device;
 	Drawable image;
 	Random rand;
@@ -133,6 +129,18 @@ RegistrationListener, SensorEventListener{
 		Log.d("Device", "" + h);
 	    // initialize your android device sensor capabilities
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		
+		User u = (User) i.getParcelableExtra(User.EXTRA);
+		Log.d("user", "" + i.getParcelableExtra(User.EXTRA));
+		Network network = new Network("novi network", "op");
+		DeviceClass deviceClass = new DeviceClass("Indoor location device",
+				"1.1");
+		deviceData = new DeviceData("164b123a-caaa-4189-a164-5123fe3dbd76",
+				"126B0A4A-CA77-4164-AABb-52A7FE3DBD76", u.getFirstname() + " "
+						+ u.getSurname(), DeviceData.DEVICE_STATUS_ONLINE,
+				network, deviceClass);
+		device = new TestDevice(getApplicationContext(), deviceData, new TestEquipment());
+
 		
 //		User user=(User)getIntent().getExtras().get(BeaconApkConfig.SHARE_USER);
 //		Space space=(Space)getIntent().getExtras().get(BeaconApkConfig.SHARE_SPACE);
