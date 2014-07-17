@@ -92,8 +92,8 @@ public class SpaceDevicesActivity extends BaseActivity {
 							Double spaceIDDouble =  jsonObj.getDouble("spaceId");
 							int spaceID = spaceIDDouble.intValue();
 						
-							task2.setUsername("admin");
-							task2.setPassword("admin");
+							task2.setUsername(sharedPref.getString(BeaconApkConfig.SHARE_USERNAME,null));
+							task2.setPassword(sharedPref.getString(BeaconApkConfig.SHARE_PASSWORD,null));
 					    	task2.setSpaceId(spaceID);
 						} catch (JSONException e1) {
 							// TODO Auto-generated catch block
