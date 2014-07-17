@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <EditTextPreference
+        android:defaultValue="http://147.91.204.220:8080/ils"
+        android:key="pref_dh_server_url"
+        android:summary="Set URL of the server where your location is shared"
+        android:title="Server URL" />
+    
+    <ListPreference
+        android:key="prefScanPeriod"
+        android:title="Scan Period"
+        android:dialogTitle="Scanning period for iBeacons"
+        android:entries="@array/scan_period_pref"
+        android:entryValues="@array/scan_period_pref"
+        android:defaultValue="100" />
+    
+    <CheckBoxPreference
+        android:key="compasOnOff"
+        android:title="Compas"
+	/>
+    <ListPreference
+        android:key="prefServerScan"
+        android:title="Data send interval"
+        android:entries="@array/scan_period_pref"
+        android:entryValues="@array/scan_period_pref"
+        android:defaultValue="100" />
+</PreferenceScreen>
