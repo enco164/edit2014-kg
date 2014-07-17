@@ -6,7 +6,9 @@ import java.util.Vector;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,7 +20,6 @@ import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.comtrade.ilserver.tasks.BeaconServer;
 import com.comtrade.mathematics.BeaconRacun;
@@ -47,7 +48,8 @@ public class TouchView extends View {
 	private int nizDim[] = new int[2];
 	private Matrix m;
 	public ArrayList<BeaconView> listBeacona = new ArrayList<>();
-
+	public Paint paint;
+	
 	private Vector<BeaconRacun> beaconPositions;	
 	private float zomiranjeSkaliranje=1;
 	public TouchView(Context context) {
@@ -87,6 +89,9 @@ public class TouchView extends View {
 		currContext = context;
 		matrix = new Matrix(); 
 		beaconPositions = new Vector<BeaconRacun>();
+		paint = new Paint();
+		paint.setColor(Color.RED);
+		paint.setAlpha(128);
 		//TODO BeaconRacun
 	}
 	
@@ -153,6 +158,9 @@ public class TouchView extends View {
 		//Log.d("C2", canvas.toString());
 		mMap.draw(canvas);
 		mDot.draw(canvas);
+		
+		canvas.drawCircle(mDot.getxCoor(), mDot.getyCoor(), 100, paint);
+		
 		for (BeaconView bc : listBeacona) {
 			bc.draw(canvas);
 		}
