@@ -80,7 +80,10 @@ RegistrationListener, SensorEventListener{
 	PointF currnetPosition;
 
 	private BeaconManager beaconManager;
-
+	private List<Beacon> listaBikonaSkeniranih;
+	private ArrayList<BeaconServer> listaBikonaIzProstora;
+	
+	
 	private List<Parameter> parameters = new LinkedList<Parameter>();
 
 	public static class Parameter {
@@ -111,7 +114,7 @@ RegistrationListener, SensorEventListener{
 		spaceS = (Space) 	i.getParcelableExtra("space");
 		sherP = PreferenceManager.getDefaultSharedPreferences(this);
 		mapFrame.getTouchView().PrimaListuBikona(spaceS.getBeacons());
-		
+		listaBikonaIzProstora = spaceS.getBeacons();
 		Toast.makeText(getApplicationContext(), spaceS.getTitle(), Toast.LENGTH_LONG).show();
 	
 		byte[] byteArray = i.getByteArrayExtra("image");
@@ -166,6 +169,9 @@ RegistrationListener, SensorEventListener{
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
 			@Override
 			public void onBeaconsDiscovered(Region region, final List<Beacon> discoveredBeacons) {
+				listaBikonaSkeniranih = discoveredBeacons;
+				
+				
 				Log.d("PSA", "pp ");
 				// Note that results are not delivered on UI thread.
 				runOnUiThread(new Runnable() {
@@ -198,6 +204,18 @@ RegistrationListener, SensorEventListener{
 
 							@Override
 							public void run() {
+								
+								int br=0;
+								for (Beacon beacon : discoveredBeacons) {
+									br++;
+								}
+								if (br!=0){
+									
+									double distanca = Math.round(Utils.computeAccuracy(discoveredBeacons.get(0)));
+									if(distanca<=1.0f)
+										postNotification("iBeacon is approximately "+distanca+" meters away.");								
+								}
+								
 								updateMap();
 							
 							}
@@ -253,36 +271,39 @@ RegistrationListener, SensorEventListener{
 
 
 	private void updateMap() {
+		Vector<BeaconRacun> beacons = new Vector<BeaconRacun>();
 
-	/*	
+		Log.d("device", "prostor "+listaBikonaIzProstora.size());
+		Log.d("device", "skenirai "+listaBikonaSkeniranih.size());
 
-			Vector<BeaconRacun> beacons = new Vector<BeaconRacun>();
+		for (Beacon skeniran : listaBikonaSkeniranih) {
+			for (BeaconServer izProstora : listaBikonaIzProstora) {
 
-			for (BeaconRacun beaconRacun : beaconConfig) {
-				beacons.add(beaconRacun);
-			}
+				Log.e(TAG, skeniran.getMacAddress() + " == " + izProstora.getMac());
+				if(skeniran.getMacAddress().equalsIgnoreCase(izProstora.getMac()))
+				{
+					float x = (float)izProstora.getX(); 
+					float y = (float)izProstora.getY();
+					//Log.d("device", "beacon size= ");
+					BeaconRacun br = new BeaconRacun(new PointF(x,y), Utils.computeAccuracy(skeniran));
+					br.setMac(skeniran.getMacAddress());
+					beacons.add(br);
 
-			for (Beacon beacon : discovered) {
-				for (BeaconRacun beaconRacun : beaconConfig) {
-					if(beacon.getMacAddress().equalsIgnoreCase(beaconRacun.getMac())){
-						beaconRacun.setDistance(Utils.computeAccuracy(beacon));
-					}
 				}
 			}
+			Log.d("device", "===============");
+		}
 
-			Vector<Circle> krive = new Vector<Circle>();
-			for(int i = 0; i<beacons.size()-1; i++){
-				for(int j=i+1; j<beacons.size(); j++){	
-					Circle krug = Circle.getTwoBeaconsCircle(beacons.elementAt(i), beacons.elementAt(j)); 
-					if(krug != null){
-						krive.add(krug);
-					}
-					
-				}
 
-			}
-			
+		Log.d("device", beacons.toString());
+
+		if(beacons.size()>2)
+		{
+
+
+			Log.e(TAG, ""+beacons.size());
 			Vector<PointF> points = Circle.potential_points(beacons);
+			Log.e(TAG, points.toString());
 
 			final PointF tacka = Circle.kandidat(points);
 
@@ -290,7 +311,6 @@ RegistrationListener, SensorEventListener{
 			if(tacka != null && !Float.isNaN(tacka.x) && !Float.isNaN(tacka.y)){
 				runOnUiThread(new Runnable() {
 					public void run() {
-
 						if (tacka.x != currnetPosition.x || tacka.y != currnetPosition.y){
 							parameters.clear();
 							addParameter("x", tacka.x);
@@ -304,8 +324,7 @@ RegistrationListener, SensorEventListener{
 				});
 
 			}
-		
-*/
+		}
 	}
 
 
