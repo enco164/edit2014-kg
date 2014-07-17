@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -82,10 +85,21 @@ public class SpaceDevicesActivity extends BaseActivity {
 						final DeviceData device = (DeviceData) adapter
 								.getItem(position);
 						
+						JSONObject jsonObj;
 						GetSpaceTask task2 = new GetSpaceTask();
-						task2.setUsername("admin");
-						task2.setPassword("admin");
-				    	task2.setSpaceId(640);
+						try {
+							jsonObj = new JSONObject(device.getData().toString());
+							Double spaceIDDouble =  jsonObj.getDouble("spaceId");
+							int spaceID = spaceIDDouble.intValue();
+						
+							task2.setUsername("admin");
+							task2.setPassword("admin");
+					    	task2.setSpaceId(spaceID);
+						} catch (JSONException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					
 						
 						task2.execute(sharedPref.getString(BeaconApkConfig.SHARE_URL, null)+"/rest/getSpace");
 						try {

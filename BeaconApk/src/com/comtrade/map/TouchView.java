@@ -111,7 +111,8 @@ public class TouchView extends View {
 	public void setMap(Drawable map,int x0, int y0, int w, int h) {
 		mMap = map;
 		mapTranslate = new Point(x0, y0);
-		mMap.setBounds(0, 0, w-x0, h-y0);
+		
+		mMap.setBounds(0, 0, w+x0, h+y0);
 		clipBoundOfCanvas=new Rect(mMap.getBounds().left,mMap.getBounds().top,mMap.getBounds().right, mMap.getBounds().bottom);
 	}
 	
@@ -332,7 +333,7 @@ public class TouchView extends View {
 			zomiranjeSkaliranje*=detector.getScaleFactor();
 			
 			Log.d("ScaleZomiranje",Float.toString(zomiranjeSkaliranje));
-			if(zomiranjeSkaliranje<0.75 || zomiranjeSkaliranje>2.5){
+			if(zomiranjeSkaliranje<0.5 || zomiranjeSkaliranje>2.5){
 				//ekran je veci od slike
 					zomiranjeSkaliranje/=detector.getScaleFactor();
 			}
