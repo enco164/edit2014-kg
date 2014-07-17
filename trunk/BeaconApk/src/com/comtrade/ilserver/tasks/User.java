@@ -25,12 +25,15 @@ import android.os.Parcelable;
 
 public class User implements Parcelable{
 	
+	public static final String EXTRA = "User";
+	
 	public final static String JSON_KEY_ID = "_id";
 	public final static String JSON_KEY_UUID = "_uuid";
 	public final static String JSON_KEY_FIRST_NAME = "firstName";
 	public final static String JSON_KEY_SURNAME = "surname";
 	public final static String JSON_KEY_USERNAME = "username";
 	public final static String JSON_KEY_ROLES = "roles";
+	
 	
 	private int id;
 	private String uuid;
