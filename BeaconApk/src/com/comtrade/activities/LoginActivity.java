@@ -70,14 +70,27 @@ public class LoginActivity extends Activity{
 				else
 				{
 				// cuva podatke u shared preferences
-					sharedPrefEditor.putString(BeaconApkConfig.SHARE_URL,txtURL.getText().toString());
+					String newUrl=txtURL.getText().toString();
+					Log.d("newurl", newUrl);
+					if(!newUrl.contains("http://")){
+						newUrl="http://"+newUrl;
+					}
+					if(!newUrl.endsWith("ils")){
+						Log.d("newurl3", newUrl);
+						newUrl=newUrl.trim();
+						newUrl=newUrl.substring(0, 30);
+					}
+					Log.d("newurl4", newUrl);
+					sharedPrefEditor.putString(BeaconApkConfig.SHARE_URL,newUrl);
+			
 					sharedPrefEditor.putString(BeaconApkConfig.SHARE_USERNAME, txtUsername.getText().toString());
 					sharedPrefEditor.putString(BeaconApkConfig.SHARE_PASSWORD, txtPassword.getText().toString());
 					sharedPrefEditor.apply();
 					ConnectTask ct = new ConnectTask();
 					ct.setUsername(txtUsername.getText().toString());
 					ct.setPassword(txtPassword.getText().toString());
-					ct.execute(txtURL.getText().toString()+"/rest/signin");
+					ct.execute(newUrl+"/rest/signin");
+					Log.d("newurl5", newUrl);
 					try {
 						String UserJSON = null;
 						UserJSON = ct.get();
@@ -91,7 +104,7 @@ public class LoginActivity extends Activity{
 						else{
 							userLogovan = User.fromJSON(UserJSON);
 							ArrayList<String> roles = userLogovan.getRoles();
-							
+							Log.d("USER2", ""+userLogovan.toString());
 							if(roles.size() == 1){
 								if(roles.get(0).toString().equals("client")){
 									Intent i = new Intent(LoginActivity.this, GuideActivity.class);
