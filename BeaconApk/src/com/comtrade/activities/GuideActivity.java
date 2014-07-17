@@ -47,6 +47,8 @@ public class GuideActivity extends Activity {
 	private Space spaceS;
 	private Intent i;
 	
+	private boolean Scanindicator=false;
+	
 	SharedPreferences sharedPref;
 	Editor sharedPrefEditor;
 	
@@ -67,9 +69,11 @@ public class GuideActivity extends Activity {
 				beaconi = arg1;
 				runOnUiThread(new Runnable() {
 					public void run() {
+						if(Scanindicator==false){
 						Beacon foundBeacon = null;
 						if(beaconi.size() > 0){
 							foundBeacon = beaconi.get(0);
+							Scanindicator=true;
 							String mac = foundBeacon.getMacAddress().toString();
 
 
@@ -157,6 +161,7 @@ public class GuideActivity extends Activity {
 						else{
 							//Toast.makeText(getApplicationContext(), "Nije nadjen", Toast.LENGTH_SHORT).show();
 						}
+					}
 					}
 				});
 			}
