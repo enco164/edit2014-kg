@@ -104,10 +104,11 @@ public class LoginActivity extends Activity{
 						else{
 							userLogovan = User.fromJSON(UserJSON);
 							ArrayList<String> roles = userLogovan.getRoles();
-							Log.d("USER2", ""+userLogovan.toString());
+							
 							if(roles.size() == 1){
 								if(roles.get(0).toString().equals("client")){
 									Intent i = new Intent(LoginActivity.this, GuideActivity.class);
+									Log.d("USER2", ""+userLogovan.toString());
 									i.putExtra(User.EXTRA, userLogovan);
 									startActivity(i);
 								}
@@ -199,6 +200,7 @@ public class LoginActivity extends Activity{
 						//TODO ovde ide akcija ukoliko se izabere obican korisnik
 						//Toast.makeText(getApplicationContext(), "USER ROLA", Toast.LENGTH_LONG).show();
 						Intent i = new Intent(LoginActivity.this, GuideActivity.class);
+						Log.d("USER1", ""+userLogovan.toString());
 						i.putExtra(User.EXTRA, userLogovan);
 						startActivity(i);
 					}

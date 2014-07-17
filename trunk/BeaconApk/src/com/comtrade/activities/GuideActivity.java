@@ -51,14 +51,15 @@ public class GuideActivity extends Activity {
 	
 	SharedPreferences sharedPref;
 	Editor sharedPrefEditor;
-	
+	private User user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide);
 		
 		sharedPref = getApplicationContext().getSharedPreferences(BeaconApkConfig.SHARE_PREFERENCE_REGISTER, 0);
-
+		user = (User) getIntent().getParcelableExtra(User.EXTRA);
+		Log.d("user " + TAG , "" + user.toString());
 		beaconManager = new BeaconManager(this);
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
 
@@ -100,7 +101,8 @@ public class GuideActivity extends Activity {
 								
 								task2.execute(sharedPref.getString(BeaconApkConfig.SHARE_URL, null)+"/rest/getSpace");
 								spaceS = Space.fromJSON(task2.get());
-								User user=(User)getIntent().getParcelableExtra(User.EXTRA);
+								Log.d(TAG, "" + getIntent().getExtras().containsKey("User"));
+								//   .getParcelableExtra(User.EXTRA);
 								i = new Intent(GuideActivity.this, DeviceActivity.class);
 								i.putExtra("space", spaceS);
 								i.putExtra(User.EXTRA, user);

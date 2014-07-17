@@ -131,7 +131,7 @@ RegistrationListener, SensorEventListener{
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
 		User u = (User) i.getParcelableExtra(User.EXTRA);
-		Log.d("user", "" + i.getParcelableExtra(User.EXTRA));
+		Log.d("user" + TAG, "" + i.getParcelableExtra(User.EXTRA));
 		Network network = new Network("novi network", "op");
 		DeviceClass deviceClass = new DeviceClass("Indoor location device",
 				"1.1");
