@@ -3,7 +3,9 @@ package com.comtrade.map;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
@@ -14,26 +16,28 @@ public class DotView extends View{
 	
 	private float xCoor, yCoor;
 	private int h,w;
-	
 	private ValueAnimator va;
-	
 	private float oldX, oldY;
 	private long animationDuration;
-	
 	private View parentView;
-	
 	private Drawable logo;
-	
+	private int preciznost;
+	private Paint paint;
+
 	public DotView(Context context, View parentView){
 		this(context);
 		this.logo = getResources().getDrawable(R.drawable.ct_logo);
 		this.logo.setBounds(0, 0, 30, 30);
 		w = 30;
 		h = 30;
-		this.parentView = parentView;
 		xCoor = 0;
 		yCoor = 0;
+		this.parentView = parentView;
 		this.animationDuration = 500;		
+		this.preciznost = 100;
+		paint = new Paint();
+		paint.setColor(Color.RED);
+		paint.setAlpha(40);
 	}
 	
 	public DotView(Context context){
@@ -49,6 +53,7 @@ public class DotView extends View{
 		canvas.save();
 		canvas.translate(-getW() / 2, -getH() / 2);
 		canvas.translate(xCoor, yCoor);
+		canvas.drawCircle(getxCoor(), getyCoor(), preciznost, paint);
 		logo.draw(canvas);
 
 		canvas.restore();
@@ -91,6 +96,15 @@ public class DotView extends View{
 		this.yCoor = yCoor;
 	}
 	
+	public int getPreciznost() {
+		return preciznost;
+	}
+
+	public void setPreciznost(int preciznost) {
+		this.preciznost = preciznost;
+	}
+
+	
 	/**
 	 * animating method which lasts for animationDuration
 	 * from current position to (x,y). 
@@ -104,12 +118,6 @@ public class DotView extends View{
 	 */
 	public void setCoordinates(final float x, final float y){
 		
-		
-		//nije testirano
-		
-		//va = ValueAnimator.ofFloat(xCoor,x,yCoor,y); //mozda treba drugaciji raspored promenljivih
-		
-		
 		va = ValueAnimator.ofFloat(0,1);
 		
 		va.setInterpolator(null); //linearno pomeranje
@@ -120,7 +128,6 @@ public class DotView extends View{
 		va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
-				
 				//menja vrednosit xCoor i yCoor u zavisnosti od izvrsavanja animacije (getAnimatedFraction vraca izmedju 0 i 1)
 				xCoor = oldX + va.getAnimatedFraction() * (x-oldX);
 				yCoor = oldY + va.getAnimatedFraction() * (y-oldY);
