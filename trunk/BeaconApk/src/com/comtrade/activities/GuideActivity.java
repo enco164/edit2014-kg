@@ -133,12 +133,7 @@ public class GuideActivity extends Activity {
 										mIcon1.compress(Bitmap.CompressFormat.PNG, 100, stream);
 										byte[] byteArray = stream.toByteArray();
 										i.putExtra("image", byteArray);
-										try {
-											beaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
-										} catch (RemoteException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}	
+									
 										startActivity(i);
 										
 										return;
