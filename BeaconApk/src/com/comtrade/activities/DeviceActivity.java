@@ -410,8 +410,8 @@ RegistrationListener, SensorEventListener{
 	protected void onResume() {
 		super.onResume();
 		//podesavanje vremena skeniranja
-		beaconManager.setBackgroundScanPeriod(sherP.getInt(SettingsFragment.SCAN_PERIOD_KEY, 0), sherP.getInt(SettingsFragment.SCAN_PERIOD_KEY, 0));
-		
+		beaconManager.setBackgroundScanPeriod(Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")), Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")));
+
 		//omogucavanje i onemogucavanje kompasa
 		Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
 		if(sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true) == true){
