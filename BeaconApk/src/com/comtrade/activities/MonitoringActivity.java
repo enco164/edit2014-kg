@@ -1,15 +1,8 @@
 package com.comtrade.activities;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -26,18 +20,17 @@ import android.widget.Toast;
 
 import com.android.devicehive.DeviceData;
 import com.comtrade.client.BaseActivity;
-import com.comtrade.device.BeaconApkConfig;
-import com.comtrade.ilserver.tasks.GetSpaceTask;
+import com.comtrade.client.SampleDeviceClient;
 import com.comtrade.ilserver.tasks.Space;
 import com.comtrade.map.MapFrame;
 import com.example.beaconapk.R;
 
 public class MonitoringActivity extends BaseActivity {
-	
+
 
 	private static final String EXTRA_DEVICE = MonitoringActivity.class.getName()
 			+ ".EXTRA_DEVICE";
-	
+
 	public static void start(Context context, DeviceData deviceData) {
 		final Intent intent = new Intent(context, MonitoringActivity.class);
 		final Bundle parentExtras = new Bundle(1);
@@ -45,10 +38,11 @@ public class MonitoringActivity extends BaseActivity {
 				deviceData.getNetwork());
 		intent.putExtra(EXTRA_DEVICE, deviceData);
 		setParentActivity(intent, SpaceDevicesActivity.class, parentExtras);
-		
+
 		context.startActivity(intent);
 	}
-	
+	Handler handler=new Handler();
+
 	private DeviceData device;
 	public SharedPreferences sherP;
 	private Bitmap mIcon1 = null;
@@ -57,20 +51,25 @@ public class MonitoringActivity extends BaseActivity {
 	public double x = 0.0;
 	public double y = 0.0;
 	public Space spaceS;
-	
+	SampleDeviceClient sampleDeviceClient;
+	Thread t;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mapF= new MapFrame(this);
-		
-		
-		
+
+
+
 		device = getIntent().getExtras().getParcelable("device");
 		if (device == null) {
 			throw new IllegalArgumentException(
 					"Device extra should be provided");
 		}
-		
+
+		sampleDeviceClient = new SampleDeviceClient(this, device);
+
 		JSONObject jsonObj;
 		try {
 			jsonObj = new JSONObject(device.getData().toString());
@@ -81,25 +80,27 @@ public class MonitoringActivity extends BaseActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			
+
 		Intent i = getIntent();
 		spaceS = (Space) 	i.getParcelableExtra("space");
 		sherP = PreferenceManager.getDefaultSharedPreferences(this);
 		mapF.getTouchView().PrimaListuBikona(spaceS.getBeacons());
-		
+
 		Toast.makeText(getApplicationContext(), spaceS.getTitle(), Toast.LENGTH_LONG).show();
-	
+
 		byte[] byteArray = i.getByteArrayExtra("image");
 		Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-		
+
 		Drawable d = new BitmapDrawable(getResources(),bmp);
 		Log.d("TAG@", d.toString());
-		
+
 		int w = spaceS.getSpaceCoordinates().get(1).getX();
 		int h = spaceS.getSpaceCoordinates().get(1).getY();
+
 		int x0 = spaceS.getSpaceCoordinates().get(0).getX();
 		int y0 = spaceS.getSpaceCoordinates().get(0).getY();
 		
+
 		Log.d("AA", ""+x+" "+y);
 		mapF.getTouchView().getDot().setxCoor((float)x*100);
 		mapF.getTouchView().getDot().setyCoor((float)y*100);
@@ -107,8 +108,77 @@ public class MonitoringActivity extends BaseActivity {
 		
 		mapF.setMapImage(d, x0, y0, w,h);		
 		setContentView(mapF);
-		
-		
+
+
+		/*
+		Thread thread = new Thread()
+		{
+		    @Override
+		    public void run() {
+		        try {
+		            while(true) {
+		                sleep(3000);
+		                sampleDeviceClient.reloadDeviceData();
+		                device=sampleDeviceClient.getDevice();
+		                JSONObject jsonObj;
+		        		double newX=0,newY=0;
+		                try {
+		        			jsonObj = new JSONObject(device.getData().toString());
+		        			newX = (double) jsonObj.get("x");
+		        			newY = (double) jsonObj.get("y");
+			        		mapF.getTouchView().mDot.setCoordinates((float) (newX/100.0), (float) (newY/100.0));
+		        		} catch (JSONException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		}
+		            }
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		};
+		thread.run();*/
+
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		Runnable r = new Runnable(){
+			public void run() 
+			{
+
+				handler.postDelayed(this, 300);
+
+				sampleDeviceClient.reloadDeviceData();
+				device=sampleDeviceClient.getDevice();
+				JSONObject jsonObj;
+				
+				try {
+					jsonObj = new JSONObject(device.getData().toString());
+					final double newX = (double) jsonObj.get("x");
+					final double newY = (double) jsonObj.get("y");
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							mapF.getTouchView().mDot.setCoordinates((float) (newX/100.0), (float) (newY/100.0));
+						}
+					});
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+		t = new Thread(r);
+		t.start();
+
 	}
 
 	@Override
