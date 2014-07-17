@@ -87,6 +87,7 @@ public class Space implements Parcelable{
 	public final static String JSON_KEY_UUID = "_uuid";
 	public final static String JSON_KEY_VERSION = "_version";
 	public final static String JSON_KEY_TITLE = "spaceTitle";
+	public final static String JSON_KEY_DATA = "data";
 	public final static String JSON_KEY_DESCRIPTION = "description";
 	public final static String JSON_KEY_WELCOMEMESSEGE = "welcomeMessage";
 	public final static String JSON_KEY_MAPADDRESS = "mapUrl";
@@ -167,11 +168,19 @@ public class Space implements Parcelable{
 		this.uuid = source.readString();
 		this.version = source.readInt();
 		this.title = source.readString();
-		this.description = source.readString();
 		this.welcomeMessage = source.readString();
 		this.mapAddress = source.readString();
 		this.beacons = source.readArrayList(BeaconServer.class.getClassLoader());
 		this.spaceCoordinates = source.readArrayList(SpaceCoordinate.class.getClassLoader());
+		String data = source.readString();
+		JSONObject dataJson;
+		try {
+			dataJson = new JSONObject(data);
+			this.description=dataJson.getString("description");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -198,8 +207,11 @@ public class Space implements Parcelable{
 				SpaceCoordinate spaceS = SpaceCoordinate.fromJSON(cooObject.get(i).toString());
 				listaCoo.add(spaceS);
 			}
-			
-			return new Space(id, uuid, version, title, "", "", mapA, listaBeacona, listaCoo);
+			// desc
+			String jsonDesc= jsonObj.getString(JSON_KEY_DATA);
+			JSONObject data= new JSONObject(jsonDesc);
+			String description= data.getString("description");
+			return new Space(id, uuid, version, title,description , "", mapA, listaBeacona, listaCoo);
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -220,11 +232,11 @@ public class Space implements Parcelable{
 		dest.writeString(uuid);
 		dest.writeInt(version);
 		dest.writeString(title);
-		dest.writeString(description);
 		dest.writeString(welcomeMessage);
 		dest.writeString(mapAddress);
 		dest.writeList(beacons);
 		dest.writeList(spaceCoordinates);
+		dest.writeString("{\"description\":\""+description+"\"}");
 	}
 	
 	public static Parcelable.Creator<Space> CREATOR = new Parcelable.Creator<Space>() {
