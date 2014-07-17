@@ -364,8 +364,10 @@ RegistrationListener, SensorEventListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
+		//podesavanje vremena skeniranja
+		beaconManager.setBackgroundScanPeriod(sherP.getInt(SettingsFragment.SCAN_PERIOD_KEY, 0), sherP.getInt(SettingsFragment.SCAN_PERIOD_KEY, 0));
 		
-		//register shared preferences listener
+		//omogucavanje i onemogucavanje kompasa
 		Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
 		if(sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true) == true){
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),

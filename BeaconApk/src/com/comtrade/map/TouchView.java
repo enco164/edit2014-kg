@@ -158,7 +158,7 @@ public class TouchView extends View {
 		//Log.d("C2", canvas.toString());
 		mMap.draw(canvas);
 		mDot.draw(canvas);
-		
+		//crtanje kruga oko logoa
 		canvas.drawCircle(mDot.getxCoor(), mDot.getyCoor(), 100, paint);
 		
 		for (BeaconView bc : listBeacona) {
