@@ -11,6 +11,8 @@ public class SettingsFragment extends PreferenceFragment{
 	public static final String SCAN_PERIOD_KEY = "prefScanPeriod";
 	public static final String COMPAS_ON_OFF="compasOnOff";
 	public static final String SERVER_SCAN="prefServerScan";
+	public static final String DISTANCE_FOR_NOTIFICATIONS="daljina";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

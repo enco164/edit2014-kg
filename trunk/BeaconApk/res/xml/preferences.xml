@@ -30,5 +30,12 @@
         android:summary="Delay between data sending"
          />
     
-    
+    <ListPreference
+        android:key="daljina"
+        android:title="distance for notifications"
+        android:entries="@array/distance_for_notifications"
+        android:entryValues="@array/distance_for_notifications"
+        android:defaultValue="1"
+        android:summary="On what distance to display notifications"
+         />
 </PreferenceScreen>
