@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class TouchView extends View {
 	private Matrix m;
 	public ArrayList<BeaconView> listBeacona = new ArrayList<>();
 	public Paint paint;
-	
+	private Rect clipBoundOfCanvas;
 	private Vector<BeaconRacun> beaconPositions;	
 	private float zomiranjeSkaliranje=1;
 	public TouchView(Context context) {
@@ -158,7 +159,11 @@ public class TouchView extends View {
 		//Log.d("C2", canvas.toString());
 		mMap.draw(canvas);
 		mDot.draw(canvas);
+
+		clipBoundOfCanvas = canvas.getClipBounds();
+
 		//crtanje kruga oko logoa
+
 		canvas.drawCircle(mDot.getxCoor(), mDot.getyCoor(), 100, paint);
 		
 		for (BeaconView bc : listBeacona) {
@@ -166,6 +171,14 @@ public class TouchView extends View {
 		}
 		canvas.restore();
 	}	
+
+	public Rect getClipBoundOfCanvas() {
+		return clipBoundOfCanvas;
+	}
+
+	public void setClipBoundOfCanvas(Rect clipBoundOfCanvas) {
+		this.clipBoundOfCanvas = clipBoundOfCanvas;
+	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -212,8 +225,8 @@ public class TouchView extends View {
 	}
 	
 	public void rotateMap(float degree, float oldDegree){
-		float centerx = mMap.getBounds().centerX();
-		float centery = mMap.getBounds().centerY();
+		float centerx = getClipBoundOfCanvas().centerX();
+		float centery = getClipBoundOfCanvas().centerY();
 		
 		if(oldDegree < degree)
 		{
