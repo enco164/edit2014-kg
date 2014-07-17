@@ -91,7 +91,7 @@ public class TouchView extends View {
 		beaconPositions = new Vector<BeaconRacun>();
 		paint = new Paint();
 		paint.setColor(Color.RED);
-		paint.setAlpha(128);
+		paint.setAlpha(40);
 		//TODO BeaconRacun
 	}
 	
