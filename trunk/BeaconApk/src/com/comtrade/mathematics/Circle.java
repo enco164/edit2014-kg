@@ -5,10 +5,8 @@ package com.comtrade.mathematics;
 
 import java.util.Vector;
 
-import com.comtrade.activities.DeviceActivity;
-
-import android.bluetooth.BluetoothClass.Device;
 import android.graphics.PointF;
+import android.util.Log;
 
 /**
  * @author shuki
@@ -32,9 +30,14 @@ public class Circle {
 	 * @param k ratio of measured distances from beacons 
 	 */
 	public Circle(float d, float k){
-		super();
-		center.set((-d/2 * (k*k + 1))/(1 - k*k), 0);
-		radius = (float) (- Math.sqrt((-d/2 * (k*k + 1))/(1 - k*k)*(-d/2 * (k*k + 1))/(1 - k*k) - d*d/4.0)); 
+		float xc = 0;
+		if(k==1){
+			k = (float)1.0001;
+		}
+		xc = (-d*(k*k + 1))/(1 - k*k);
+		radius = (float) Math.sqrt(xc*xc - d*d);
+
+		center = new PointF(xc, 0);	
 	}
 
 	/**
@@ -42,7 +45,7 @@ public class Circle {
 	 * @param point
 	 */
 	public void translate(PointF point){
-		center.set(center.x+point.x, center.y+point.y);
+		center = new PointF(center.x + point.x, center.y + point.y);
 	}
 
 	/**
@@ -53,44 +56,68 @@ public class Circle {
 	 */
 	public static Vector<PointF> circleIntersect(Circle a, Circle b){
 		Vector<PointF> points = new Vector<PointF>();
-		float x0, y0, r0, x1, y1, r1, dx, dy, d, d1, x2, y2, h, rx, ry, xi, xi_prime, yi, yi_prime;
-		
-		x0 = a.center.x;
-		y0 = a.center.y;
-		r0 = a.radius;
-		x1 = b.center.x;
-		y1 = b.center.y;
-		r1 = b.radius;
-		dx = x1 - x0;
-		dy = y1 - y0;
-		
-		d = (float) Math.sqrt(dx * dx + dy * dy);
-		
-		if (d > (r0 + r1))
+
+		double c, dx, dy, d, h, rx, ry;
+		double x2, y2;
+
+		/* dx and dy are the vertical and horizontal distances between
+		 * the circle centers.
+		 */
+		dx = b.center.x - a.center.x;
+		dy = b.center.y - a.center.y;
+
+		/* Determine the straight-line distance between the centers. */
+		d = Math.sqrt((dy*dy) + (dx*dx));
+
+		/* Check for solvability. */
+		if (d > (a.radius + b.radius))
 		{
+			/* no solution. circles do not intersect. */
 			return null;
 		}
-		
-		if (d < Math.abs(r0 - r1))
+		if (d < Math.abs(a.radius - b.radius))
 		{
+			/* no solution. one circle is contained in the other */
 			return null;
 		}
-		
-		d1 = (float) (((r0*r0) - (r1*r1) + (d*d)) / (2.0 * d));
-		x2 =  x0 + (dx * d1/d);
-		y2 =  y0 + (dy * d1/d);
-		h = (float) Math.sqrt((r0*r0) - (d1*d1));
+
+		/* 'point 2' is the point where the line through the circle
+		 * intersection points crosses the line between the circle
+		 * centers.  
+		 */
+
+		/* Determine the distance from point 0 to point 2. */
+		c = ((a.radius*a.radius) - (b.radius*b.radius) + (d*d)) / (2.0 * d) ;
+
+		/* Determine the coordinates of point 2. */
+		x2 = a.center.x + (dx * c/d);
+
+		y2 = a.center.y + (dy * c/d);
+
+		/* Determine the distance from point 2 to either of the
+		 * intersection points.
+		 */
+		h = Math.sqrt((a.radius*a.radius) - (c*c));
+
+		/* Now determine the offsets of the intersection points from
+		 * point 2.
+		 */
 		rx = -dy * (h/d);
-        ry = dx * (h/d);
-        
-        xi = x2 + rx;
-        xi_prime = x2 - rx;
-        yi = y2 + ry;
-        yi_prime = y2 - ry;
-        
-        points.add(new PointF(xi, yi));
-        points.add(new PointF(xi_prime, yi_prime));
-        
+		ry = dx * (h/d);
+
+
+		/* Determine the absolute intersection points. */
+		PointF point1 = new PointF();
+		PointF point2 = new PointF();
+
+		point1.x = (float) (x2 + rx);
+		point2.x = (float) (x2 - rx);
+		point1.y = (float) (y2 + ry);
+		point2.y = (float) (y2 - ry);
+
+		points.clear();
+		points.add(point1);
+		points.add(point2);
 		return points;	
 
 	}
@@ -183,14 +210,14 @@ public class Circle {
 				Circle krug = getTwoBeaconsCircle(beacons.elementAt(i), beacons.elementAt(j)); 
 				if(krug != null){
 					krive.add(krug);
-
 				}
 				else{
 					continue;
 				}
 			}
-
 		}
+		
+		Log.e("Circle", "====================================");
 
 		for(int i = 0; i < krive.size()-1; i++){
 			for(int j=i+1; j<krive.size(); j++){
@@ -224,7 +251,7 @@ public class Circle {
 		for (PointF pointF : points) {
 
 
-			if(pointF.x > 4.2 || pointF.x<0 || pointF.y < 0 || pointF.y > 5.1){
+			if( pointF.x<0 || pointF.y < 0){
 
 				k--;
 				continue;
@@ -236,6 +263,4 @@ public class Circle {
 
 		return new PointF((float)(x/k), (float)(y/k));
 	}
-	
-	
 }
