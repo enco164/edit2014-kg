@@ -1,8 +1,8 @@
 package com.comtrade.device;
 
 public class BeaconApkConfig {
-	public static final String URI_ILS_DEFAULT = "http://147.91.204.220:8080/ils";
-	public static final String URI_DH_DEFAULT = "http://147.91.204.220:8181/DeviceHiveJava/rest";
+	public static final String URI_ILS_DEFAULT = "http://192.168.1.100:8080/ils";
+	public static final String URI_DH_DEFAULT = "http://192.168.1.100:8181/DeviceHiveJava/rest";
 	
 	//Shared
 	public static final String CRED_KEY = "Credentials";
