@@ -33,7 +33,7 @@
 		    android:id="@+id/TextView01"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:text="Credintials"
+		    android:text="Credentials"
 		    android:textSize="8pt" />
 
 		<TextView 
