@@ -55,6 +55,7 @@ public class MonitoringActivity extends BaseActivity {
 	SampleDeviceClient sampleDeviceClient;
 	Thread t;
 
+	Runnable r;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +150,7 @@ public class MonitoringActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 
-		Runnable r = new Runnable(){
+		r = new Runnable(){
 			public void run() 
 			{
 
@@ -187,11 +188,18 @@ public class MonitoringActivity extends BaseActivity {
 		t.start();
 
 	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		handler.removeCallbacks(r);
+		super.onPause();
+	}
 
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-		t.stop();
+		
 		super.onStop();
 	}
 
