@@ -78,7 +78,7 @@ public class DeviceData extends DataContainer {
 	/* package */DeviceData(Serializable data, String id, String key,
 			String name, String status, Network network,
 			DeviceClass deviceClass, List<EquipmentData> equipment) {
-		super("mrs");
+		super(data);
 		this.id = id;
 		this.key = key;
 		this.name = name;

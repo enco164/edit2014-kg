@@ -18,5 +18,8 @@
     <string name="title_activity_network_devices">NetworkDevicesActivity</string>
     <string name="title_activity_space_devices">SpaceDevicesActivity</string>
     <string name="title_activity_monitoring">MonitoringActivity</string>
+    <string name="title_activity_test">Test</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_test1">Test1Activity</string>
 
 </resources>

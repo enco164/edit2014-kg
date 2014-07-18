@@ -42,7 +42,7 @@ public class TouchView extends View {
 	protected Drawable iBeacon;
 	private float scaleRatio;
 	private int nizDim[] = new int[2];
-	public ArrayList<BeaconView> listBeacona = new ArrayList<>();
+	public ArrayList<BeaconView> listBeacona = new ArrayList<BeaconView>();
 	public Paint paint;
 	private Rect clipBoundOfCanvas;
 	private Vector<BeaconRacun> beaconPositions;	

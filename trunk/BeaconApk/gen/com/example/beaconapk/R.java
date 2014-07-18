@@ -84,13 +84,15 @@ containing a value of this type.
         public static final int activity_register=0x7f030008;
         public static final int activity_space_devices=0x7f030009;
         public static final int activity_spaces=0x7f03000a;
-        public static final int check_list_view=0x7f03000b;
-        public static final int coordinate_picker=0x7f03000c;
-        public static final int fragment_first=0x7f03000d;
-        public static final int list_view=0x7f03000e;
-        public static final int map_frame=0x7f03000f;
-        public static final int menu_progress=0x7f030010;
-        public static final int network_list_item=0x7f030011;
+        public static final int activity_test=0x7f03000b;
+        public static final int activity_test1=0x7f03000c;
+        public static final int check_list_view=0x7f03000d;
+        public static final int coordinate_picker=0x7f03000e;
+        public static final int fragment_first=0x7f03000f;
+        public static final int list_view=0x7f030010;
+        public static final int map_frame=0x7f030011;
+        public static final int menu_progress=0x7f030012;
+        public static final int network_list_item=0x7f030013;
     }
     public static final class menu {
         public static final int device=0x7f090000;
@@ -112,6 +114,7 @@ containing a value of this type.
         public static final int editText_lastName=0x7f07000b;
         public static final int editText_password=0x7f070009;
         public static final int editText_username=0x7f070008;
+        public static final int hello_world=0x7f070012;
         public static final int title_activity_device=0x7f070004;
         public static final int title_activity_guide=0x7f070003;
         public static final int title_activity_list_devices=0x7f070005;
@@ -121,6 +124,8 @@ containing a value of this type.
         public static final int title_activity_network_devices=0x7f07000e;
         public static final int title_activity_space_devices=0x7f07000f;
         public static final int title_activity_spaces=0x7f07000d;
+        public static final int title_activity_test=0x7f070011;
+        public static final int title_activity_test1=0x7f070013;
         public static final int title_activity_test_vezbanje=0x7f07000c;
     }
     public static final class style {

@@ -40,7 +40,6 @@ import android.widget.Toast;
 import com.comtrade.device.BeaconApkConfig;
 import com.comtrade.device.TestDevice;
 import com.comtrade.device.TestDevice.RegistrationListener;
-import com.comtrade.device.TestEquipment;
 import com.comtrade.ilserver.tasks.BeaconServer;
 import com.comtrade.ilserver.tasks.Space;
 import com.comtrade.ilserver.tasks.User;
@@ -75,12 +74,13 @@ RegistrationListener, SensorEventListener{
 	public Space spaceS;
 	PointF currnetPosition;
 	private int daljina; //daljina na koju ce da izbacuje notifikacije
-	
+
 	private BeaconManager beaconManager;
 	private List<Beacon> listaBikonaSkeniranih;
 	private ArrayList<BeaconServer> listaBikonaIzProstora;
-	
-	
+
+
+
 	private List<Parameter> parameters = new LinkedList<Parameter>();
 
 	public static class Parameter {
@@ -92,7 +92,7 @@ RegistrationListener, SensorEventListener{
 			this.value = value;
 		}
 	}
-	
+
 	SharedPreferences sharedPref;
 	Editor sharedPrefEditor;
 	DeviceData deviceData;
@@ -108,7 +108,7 @@ RegistrationListener, SensorEventListener{
 		mapFrame = new MapFrame(getApplicationContext());
 		setContentView(mapFrame);
 
-		
+
 		currnetPosition = new PointF();
 		Intent i = getIntent();
 		spaceS = (Space) 	i.getParcelableExtra("space");
@@ -116,83 +116,84 @@ RegistrationListener, SensorEventListener{
 		mapFrame.getTouchView().PrimaListuBikona(spaceS.getBeacons());
 		listaBikonaIzProstora = spaceS.getBeacons();
 		Toast.makeText(getApplicationContext(), spaceS.getTitle(), Toast.LENGTH_LONG).show();
-	
+
 		byte[] byteArray = i.getByteArrayExtra("image");
 		Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-		
+
 		Drawable d = new BitmapDrawable(getResources(),bmp);
 		Log.d("TAG@", d.toString());
-		
+
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, "1"));
 		Log.d("daljina", ""+daljina);
-		
-		
+
+
 		int w = spaceS.getSpaceCoordinates().get(1).getX();
 		int h = spaceS.getSpaceCoordinates().get(1).getY();
 		int x0 = spaceS.getSpaceCoordinates().get(0).getX();
 		int y0 = spaceS.getSpaceCoordinates().get(0).getY();
-		
+
 		mapFrame.setMapImage(d,x0, y0, w,h);		
-		
+
 		Log.d("Device", "" + w);
 		Log.d("Device", "" + h);
-	    // initialize your android device sensor capabilities
+		// initialize your android device sensor capabilities
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		
+
 		User user = (User) i.getParcelableExtra(User.EXTRA);
 		Log.d("user" + TAG, "" + i.getParcelableExtra(User.EXTRA));
-		
+
 		String deviceId=user.getUuid();
 		String deviceName=user.getFirstname()+" "+user.getSurname();
 		String deviceKey="4D6B0A4A-CA77-4164-AAB0-52A7FE3DBD76";
-		
-		
+
+
 
 		Network network = new Network(spaceS.getTitle(), spaceS.getTitle(), spaceS.getTitle());
 		DeviceClass deviceClass = new DeviceClass("Indoor location device",
 				"1.1");
 		deviceData = new DeviceData(deviceId, deviceKey	, deviceName, DeviceData.DEVICE_STATUS_ONLINE, network, deviceClass);
-		
+
 		device = new TestDevice(getApplicationContext(), deviceData);
 
 		//Setting up DeviceHive
 		parameters = new LinkedList<Parameter>();
-		
+
 		// ...
 
 		rand = new Random();
 		Button btn = mapFrame.getButton();
 		btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				mapFrame.getTouchView().logoCentar();
 			}
 		});
-		
+
 		// Podesavanje iBeacon
-		
+
 		beaconManager = new BeaconManager(this);
+		beaconManager.setForegroundScanPeriod(50,50);
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
 			@Override
 			public void onBeaconsDiscovered(Region region, final List<Beacon> discoveredBeacons) {
 				listaBikonaSkeniranih = discoveredBeacons;
-				
+
 				Log.d("PSA", "pp ");
 				// Note that results are not delivered on UI thread.
 				runOnUiThread(new Runnable() {
 					public void run() {
 						Log.d("PSA", "pp "+ discoveredBeacons.size());
 						if(discoveredBeacons.size() > 0){
-						
+
 							Log.d("PSA", "pp "+ Utils.computeAccuracy(discoveredBeacons.get(0)));
-							
+
 							//za svaki beacon na manje od 1 m salje notifikaciju
 							for (int j = 0; j < discoveredBeacons.size(); j++) {
 								Log.d("NOTIFIKACIJe",""+ Utils.computeAccuracy(discoveredBeacons.get(j)));
-								if(Utils.computeAccuracy(discoveredBeacons.get(j)) < daljina){
+								if(Utils.computeAccuracy(discoveredBeacons.get(j)) < 0.7){ // TODO daljina
 									DecimalFormat df = new DecimalFormat("#.##");		
 									//"Closest iBeacon is approximately " + df.format(Utils.computeAccuracy(discoveredBeacons.get(0)))+" meters away"
 									int idNotifikacije = VratiIdBikona(discoveredBeacons.get(j));
@@ -201,7 +202,7 @@ RegistrationListener, SensorEventListener{
 									}
 								}
 							}	
-								
+
 							if(discoveredBeacons.size()>2){
 								//ovde moze
 							}
@@ -223,9 +224,9 @@ RegistrationListener, SensorEventListener{
 
 							@Override
 							public void run() {
-								
+
 								updateMap();
-							
+
 							}
 
 
@@ -237,26 +238,26 @@ RegistrationListener, SensorEventListener{
 
 			}
 		});
-		
+
 		beaconManager.setMonitoringListener(new MonitoringListener() {
-			
+
 			@Override
 			public void onExitedRegion(Region arg0) {
-				
+
 				Toast.makeText(getApplicationContext(), "Out of region", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onEnteredRegion(Region arg0, List<Beacon> arg1) {
-				
-			
-				
-				
+
+
+
+
 			}
 		});
 
 	}
-	
+
 	private String NadjiUListi(List<Beacon> arg1){
 		ArrayList<BeaconServer> lisBe = spaceS.getBeacons();
 		for (BeaconServer beaconServer : lisBe) {
@@ -277,7 +278,7 @@ RegistrationListener, SensorEventListener{
 		Log.d("los id", "ne uzima id");
 		return -1;
 	}
-	
+
 	private String VratiPorukuBikona(Beacon b)
 	{
 		for (BeaconServer izProstora : listaBikonaIzProstora) {											
@@ -286,16 +287,16 @@ RegistrationListener, SensorEventListener{
 			}
 		}
 		return "";
-		
+
 	}
-	
+
 	private void postNotification(int id, String msg) {				
 		Notification.Builder notification = new Notification.Builder(this)
 		.setSmallIcon(R.drawable.beacon_gray)
 		.setContentTitle(spaceS.getTitle())//space
 		.setContentText(msg);//massage iz bikona
 		notificationManager.notify(id, notification.build());
-		
+
 	}
 
 
@@ -361,7 +362,6 @@ RegistrationListener, SensorEventListener{
 
 	private void sendDeviceDataNotification() {
 		HashMap<String, Object> parameters = paramsAsMap(this.parameters);
-		
 		device.getDeviceData().setData(parameters);
 		device.registerDevice();
 		//Log.d(TAG, ""+device.getDeviceData().getData().toString());
@@ -376,7 +376,7 @@ RegistrationListener, SensorEventListener{
 			public void onServiceReady() {
 				try {
 					beaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION);
-				//	beaconManager.startMonitoring(ALL_ESTIMOTE_BEACONS_REGION);
+					//	beaconManager.startMonitoring(ALL_ESTIMOTE_BEACONS_REGION);
 					Log.d("SSS", "OVDE2");
 				} catch (RemoteException e) {
 					Toast.makeText(
@@ -388,11 +388,11 @@ RegistrationListener, SensorEventListener{
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-	
+
 		// Check if device supports Bluetooth Low Energy.
 		if (!beaconManager.hasBluetooth()) {
 			Toast.makeText(this, "Device does not have Bluetooth Low Energy",
@@ -427,8 +427,8 @@ RegistrationListener, SensorEventListener{
 		else{
 			mSensorManager.unregisterListener(this);
 		}
-        // for the system's orientation sensor registered listeners
-	
+		// for the system's orientation sensor registered listeners
+
 
 		//Device
 		device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
@@ -438,9 +438,9 @@ RegistrationListener, SensorEventListener{
 		} else {
 			device.startProcessingCommands();
 		}
-		
-		
-		
+
+
+
 		// iBeacons
 
 		//TODO: MapFrame set beacon Position
@@ -452,17 +452,17 @@ RegistrationListener, SensorEventListener{
 	public void onSensorChanged(SensorEvent event) {
 		float degree = Math.round(event.values[0]);
 		mapFrame.getTouchView().rotateMap(degree, currentDegree);
-		
+
 		currentDegree = degree;
-	
+
 	};
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 
 		//unregister shared preferences listener
-        // to stop the listener and save battery
+		// to stop the listener and save battery
 		mSensorManager.unregisterListener(this);
 
 		if (isFinishing()) {
@@ -487,7 +487,7 @@ RegistrationListener, SensorEventListener{
 	protected void onDestroy() {
 		// disconnect device 
 		//device.removeDeviceListener(this);
-		
+
 		if (isFinishing()) {
 			//device.unregisterDevice();
 		}
@@ -610,7 +610,7 @@ RegistrationListener, SensorEventListener{
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

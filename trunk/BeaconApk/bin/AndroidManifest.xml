@@ -33,7 +33,7 @@
         <activity
             android:name="com.comtrade.activities.LoginActivity"
             android:label="@string/title_activity_login" >
-            <intent-filter>
+			<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -50,8 +50,8 @@
         </activity>
         <activity
             android:name="com.comtrade.activities.DeviceActivity"
-            android:label="@string/title_activity_device" 
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_device"
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- Services -->
@@ -76,6 +76,15 @@
         <activity
             android:name="com.comtrade.activities.MonitoringActivity"
             android:label="@string/title_activity_monitoring" >
+        </activity>
+        <activity
+            android:name=".Test"
+            android:label="@string/title_activity_test" >
+        </activity>
+        <activity
+            android:name=".Test1Activity"
+            android:label="@string/title_activity_test1" >
+
         </activity>
     </application>
 

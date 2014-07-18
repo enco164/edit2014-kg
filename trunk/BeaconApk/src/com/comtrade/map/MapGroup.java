@@ -11,7 +11,7 @@ public class MapGroup extends ViewGroup {
 
 	TouchView tView;
 	DotView dView;
-	ArrayList<BeaconServer> listaBeacona = new ArrayList<>();
+	ArrayList<BeaconServer> listaBeacona = new ArrayList<BeaconServer>();
 	
 	
 	
