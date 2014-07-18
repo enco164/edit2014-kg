@@ -203,7 +203,15 @@ public class Circle {
 	public static Vector<PointF> potential_points(Vector<BeaconRacun> beacons){
 		//potencijalne tacke (sve tacke preseka krivih)
 		Vector<PointF> points = new Vector<PointF>();
-
+		
+		float MAX_X = 0;
+		float MAX_Y = 0;
+		
+		for (BeaconRacun beacon : beacons) {
+			MAX_X = beacon.getPosition().x > MAX_X ? beacon.getPosition().x : MAX_X;
+			MAX_Y = beacon.getPosition().y > MAX_Y ? beacon.getPosition().y : MAX_Y;
+		}
+		
 		Vector<Circle> krive = new Vector<Circle>();
 		for(int i = 0; i<beacons.size()-1; i++){
 			for(int j=i+1; j<beacons.size(); j++){	
@@ -224,10 +232,17 @@ public class Circle {
 				tacke = Circle.circleIntersect(krive.elementAt(i), krive.elementAt(j));
 				//tacke = presek_krivi(krive.elementAt(i), krive.elementAt(j));
 				if(tacke != null){
-					points.addAll(tacke);
+					for (PointF tacka : tacke) {
+						if (tacka.x > MAX_X || tacka.y > MAX_Y || tacka.x < 0 || tacka.y < 0) {
+							continue;
+						} 
+						points.add(tacka);
+					}
 				}
 			}
 		}
+		
+		
 
 		return points;
 	}
@@ -243,7 +258,16 @@ public class Circle {
 		if(points.size() == 0){ 
 			return new PointF(0,0);
 		}
+		
+		int N = points.size();
+		PointF tacke[] = new PointF[N];
+		for (int i = 0; i < N; i++) {
+			tacke[i] = new PointF(points.elementAt(i).x, points.elementAt(i).y);
+		}
 
+		ClosestPair closestPair = new ClosestPair(tacke);
+		/*
+		
 		int k=points.size();
 		double x = 0;
 		double y = 0;
@@ -261,6 +285,16 @@ public class Circle {
 			y += pointF.y;
 		}
 
-		return new PointF((float)(x/k), (float)(y/k));
+		*/
+		if (closestPair.other() == null && closestPair.either() == null) {
+			return new PointF(0,0);
+		}else if (closestPair.other() == null){
+			return closestPair.either();
+		} else if (closestPair.either() == null){
+			return closestPair.other();
+		}
+		
+		return new PointF((float)(closestPair.other().x+closestPair.either().x)/2,
+				(float)(closestPair.other().y+closestPair.either().y)/2);
 	}
 }

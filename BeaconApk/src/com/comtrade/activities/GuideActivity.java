@@ -61,6 +61,7 @@ public class GuideActivity extends Activity {
 		user = (User) getIntent().getParcelableExtra(User.EXTRA);
 		Log.d("user " + TAG , "" + user.toString());
 		beaconManager = new BeaconManager(this);
+		beaconManager.setForegroundScanPeriod(50, 200);
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
 
 
@@ -115,6 +116,7 @@ public class GuideActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										Log.d("Skidanje slike", "skidam");
 									    URL url_value;
 										ByteArrayOutputStream stream = new ByteArrayOutputStream();
 										try {
@@ -133,7 +135,7 @@ public class GuideActivity extends Activity {
 										mIcon1.compress(Bitmap.CompressFormat.PNG, 100, stream);
 										byte[] byteArray = stream.toByteArray();
 										i.putExtra("image", byteArray);
-									
+										Log.d("Skidanje slike", "skinuo");
 										startActivity(i);
 										
 										return;

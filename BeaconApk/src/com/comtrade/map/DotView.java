@@ -33,7 +33,7 @@ public class DotView extends View{
 		xCoor = 0;
 		yCoor = 0;
 		this.parentView = parentView;
-		this.animationDuration = 500;		
+		this.animationDuration = 1000;		
 		this.preciznost = 100;
 		paint = new Paint();
 		paint.setColor(Color.RED);

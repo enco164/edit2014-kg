@@ -75,8 +75,9 @@ public class MonitoringActivity extends BaseActivity {
 		JSONObject jsonObj;
 		try {
 			jsonObj = new JSONObject(device.getData().toString());
-			x = (double) jsonObj.get("x");
-			y = (double) jsonObj.get("y");
+			x = (double) jsonObj.getDouble("x");
+			y = (double) jsonObj.getDouble("y");
+			// TODO
 			Log.d("AA", ""+x);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -160,8 +161,8 @@ public class MonitoringActivity extends BaseActivity {
 
 				try {
 					jsonObj = new JSONObject(sampleDeviceClient.getDevice().getData().toString());
-					final double newX = (double) jsonObj.get("x");
-					final double newY = (double) jsonObj.get("y");
+					final double newX = (double) jsonObj.getDouble("x");
+					final double newY = (double) jsonObj.getDouble("y");
 					Log.d("coors", ""+sampleDeviceClient.getDevice().getData().toString() + "       " + newX) ;
 					if (newX == 0 && newY==0){
 
