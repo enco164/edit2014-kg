@@ -342,7 +342,7 @@ RegistrationListener, SensorEventListener{
 			if(tacka != null && !Float.isNaN(tacka.x) && !Float.isNaN(tacka.y) && !(tacka.x==0 && tacka.y==0)){
 				runOnUiThread(new Runnable() {
 					public void run() {
-						if (currnetPosition.x < Math.abs(tacka.x+ 0.75) || currnetPosition.x < Math.abs(tacka.x+0.75) ){
+						if (currnetPosition.x < Math.abs(tacka.x+ 75) || currnetPosition.x < Math.abs(tacka.x+75) ){
 							parameters.clear();
 							addParameter("x", tacka.x);
 							addParameter("y", tacka.y);
