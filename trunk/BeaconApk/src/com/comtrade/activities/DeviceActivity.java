@@ -121,11 +121,11 @@ RegistrationListener, SensorEventListener{
 		Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
 		Drawable d = new BitmapDrawable(getResources(),bmp);
-		Log.d("TAG@", d.toString());
+	//	//log.d("TAG@", d.toString());
 
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, "1"));
-		Log.d("daljina", ""+daljina);
+	//	//log.d("daljina", ""+daljina);
 
 
 		int w = spaceS.getSpaceCoordinates().get(1).getX();
@@ -135,13 +135,13 @@ RegistrationListener, SensorEventListener{
 
 		mapFrame.setMapImage(d,x0, y0, w,h);		
 
-		Log.d("Device", "" + w);
-		Log.d("Device", "" + h);
+	//	//log.d("Device", "" + w);
+	//	//log.d("Device", "" + h);
 		// initialize your android device sensor capabilities
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		User user = (User) i.getParcelableExtra(User.EXTRA);
-		Log.d("user" + TAG, "" + i.getParcelableExtra(User.EXTRA));
+	//	//log.d("user" + TAG, "" + i.getParcelableExtra(User.EXTRA));
 
 		String deviceId=user.getUuid();
 		String deviceName=user.getFirstname()+" "+user.getSurname();
@@ -175,24 +175,24 @@ RegistrationListener, SensorEventListener{
 		// Podesavanje iBeacon
 
 		beaconManager = new BeaconManager(this);
-		beaconManager.setForegroundScanPeriod(50,50);
+		beaconManager.setForegroundScanPeriod(250,50);
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
 			@Override
 			public void onBeaconsDiscovered(Region region, final List<Beacon> discoveredBeacons) {
 				listaBikonaSkeniranih = discoveredBeacons;
 
-				Log.d("PSA", "pp ");
+		//		//log.d("PSA", "pp ");
 				// Note that results are not delivered on UI thread.
 				runOnUiThread(new Runnable() {
 					public void run() {
-						Log.d("PSA", "pp "+ discoveredBeacons.size());
+				//		//log.d("PSA", "pp "+ discoveredBeacons.size());
 						if(discoveredBeacons.size() > 0){
 
-							Log.d("PSA", "pp "+ Utils.computeAccuracy(discoveredBeacons.get(0)));
+					//		//log.d("PSA", "pp "+ Utils.computeAccuracy(discoveredBeacons.get(0)));
 
 							//za svaki beacon na manje od 1 m salje notifikaciju
 							for (int j = 0; j < discoveredBeacons.size(); j++) {
-								Log.d("NOTIFIKACIJe",""+ Utils.computeAccuracy(discoveredBeacons.get(j)));
+							//	//log.d("NOTIFIKACIJe",""+ Utils.computeAccuracy(discoveredBeacons.get(j)));
 								if(Utils.computeAccuracy(discoveredBeacons.get(j)) < 0.7){ // TODO daljina
 									DecimalFormat df = new DecimalFormat("#.##");		
 									//"Closest iBeacon is approximately " + df.format(Utils.computeAccuracy(discoveredBeacons.get(0)))+" meters away"
@@ -275,7 +275,7 @@ RegistrationListener, SensorEventListener{
 				return izProstora.getId();
 			}
 		}
-		Log.d("los id", "ne uzima id");
+	//	//log.d("los id", "ne uzima id");
 		return -1;
 	}
 
@@ -304,37 +304,37 @@ RegistrationListener, SensorEventListener{
 	private void updateMap() {
 		Vector<BeaconRacun> beacons = new Vector<BeaconRacun>();
 
-		Log.d("device", "prostor "+listaBikonaIzProstora.size());
-		Log.d("device", "skenirai "+listaBikonaSkeniranih.size());
+		//log.d("device", "prostor "+listaBikonaIzProstora.size());
+		//log.d("device", "skenirai "+listaBikonaSkeniranih.size());
 
 		for (Beacon skeniran : listaBikonaSkeniranih) {
 			for (BeaconServer izProstora : listaBikonaIzProstora) {
 
-				Log.e(TAG, skeniran.getMacAddress() + " == " + izProstora.getMac());
+				//log.e(TAG, skeniran.getMacAddress() + " == " + izProstora.getMac());
 				if(skeniran.getMacAddress().equalsIgnoreCase(izProstora.getMac()))
 				{
 					float x = (float)izProstora.getX(); 
 					float y = (float)izProstora.getY();
-					//Log.d("device", "beacon size= ");
+					////log.d("device", "beacon size= ");
 					BeaconRacun br = new BeaconRacun(new PointF(x,y), Utils.computeAccuracy(skeniran));
 					br.setMac(skeniran.getMacAddress());
 					beacons.add(br);
 
 				}
 			}
-			Log.d("device", "===============");
+			//log.d("device", "===============");
 		}
 
 
-		Log.d("device", beacons.toString());
+		//log.d("device", beacons.toString());
 
 		if(beacons.size()>2)
 		{
 
 
-			Log.e(TAG, ""+beacons.size());
+			//log.e(TAG, ""+beacons.size());
 			Vector<PointF> points = Circle.potential_points(beacons);
-			Log.e(TAG, points.toString());
+			//log.e(TAG, points.toString());
 
 			final PointF tacka = Circle.kandidat(points);
 
@@ -347,7 +347,7 @@ RegistrationListener, SensorEventListener{
 							addParameter("x", tacka.x);
 							addParameter("y", tacka.y);
 							sendDeviceDataNotification();
-							Log.d(TAG, ""+tacka.x + " " + tacka.y);
+							//log.d(TAG, ""+tacka.x + " " + tacka.y);
 							mapFrame.getTouchView().getDot().setCoordinates(tacka.x, tacka.y);
 						}
 
@@ -364,7 +364,7 @@ RegistrationListener, SensorEventListener{
 		HashMap<String, Object> parameters = paramsAsMap(this.parameters);
 		device.getDeviceData().setData(parameters);
 		device.registerDevice();
-		//Log.d(TAG, ""+device.getDeviceData().getData().toString());
+		////log.d(TAG, ""+device.getDeviceData().getData().toString());
 	}
 
 
@@ -377,13 +377,13 @@ RegistrationListener, SensorEventListener{
 				try {
 					beaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION);
 					//	beaconManager.startMonitoring(ALL_ESTIMOTE_BEACONS_REGION);
-					Log.d("SSS", "OVDE2");
+					//log.d("SSS", "OVDE2");
 				} catch (RemoteException e) {
 					Toast.makeText(
 							DeviceActivity.this,
 							"Cannot start ranging, something terrible happened",
 							Toast.LENGTH_LONG).show();
-					Log.e(TAG, "Cannot start ranging", e);
+					//log.e(TAG, "Cannot start ranging", e);
 				}
 			}
 		});
@@ -417,9 +417,9 @@ RegistrationListener, SensorEventListener{
 		//podesavanje vremena skeniranja
 		beaconManager.setBackgroundScanPeriod(Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")), Long.parseLong(sherP.getString(SettingsFragment.SCAN_PERIOD_KEY, "")));
 		daljina =Integer.parseInt(sherP.getString(SettingsFragment.DISTANCE_FOR_NOTIFICATIONS, "1"));
-		Log.d("daljina", ""+daljina);
+		//log.d("daljina", ""+daljina);
 		//omogucavanje i onemogucavanje kompasa
-		Log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
+		//log.d("dasdfa",""+ sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true));
 		if(sherP.getBoolean(SettingsFragment.COMPAS_ON_OFF, true) == true){
 			mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
 					SensorManager.SENSOR_DELAY_GAME);
@@ -476,7 +476,7 @@ RegistrationListener, SensorEventListener{
 		try {
 			beaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
 		} catch (RemoteException e) {
-			Log.d(TAG, "Error while stopping ranging", e);
+			//log.d(TAG, "Error while stopping ranging", e);
 		}
 
 		super.onStop();
@@ -560,7 +560,7 @@ RegistrationListener, SensorEventListener{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK) {
-			Log.d(TAG, "Changed settings!");
+			//log.d(TAG, "Changed settings!");
 			//device.unregisterDevice();
 			//device.setApiEnpointUrl(BeaconApkConfig.URI_DH_DEFAULT);
 		}
