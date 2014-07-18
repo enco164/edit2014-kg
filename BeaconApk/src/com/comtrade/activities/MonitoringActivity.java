@@ -153,7 +153,7 @@ public class MonitoringActivity extends BaseActivity {
 			public void run() 
 			{
 
-				handler.postDelayed(this, 1000);
+				handler.postDelayed(this, 700);
 
 				sampleDeviceClient.reloadDeviceData();
 				device=sampleDeviceClient.getDevice();
